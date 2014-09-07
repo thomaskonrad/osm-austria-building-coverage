@@ -122,8 +122,3 @@ update austria_admin_boundaries set color='#'||substring(encode(digest(name, 'sh
 -- Special cases: [DONE] Rust (Statutarstadt), [DONE] Neusiedl am See (split in two), [DONE] Eisenstadt,
 -- [DONE] Naarn im Machlande (not here but in OSM), [DONE] Perg (not here but in OSM), [DONE] Kulm am Zirbitz (not in OSM)
 -- [DONE] Kleinlobming (not in OSM), [DONE] Reisstraße (not here but in OSM), [DONE] Großsölk (not in OSM, Sölk?)
-
-
-
--- Select them all
-select * from austria_admin_boundaries;
