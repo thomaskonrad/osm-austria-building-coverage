@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <FontSet name="bold-fonts">
+        <Font face-name="DejaVu Sans Bold"/>
+        <Font face-name="unifont Medium"/>
+    </FontSet>
+    <FontSet name="book-fonts">
+        <Font face-name="DejaVu Sans Book"/>
+        <Font face-name="unifont Medium"/>
+    </FontSet>
+    <FontSet name="oblique-fonts">
+        <Font face-name="DejaVu Sans Oblique"/>
+        <Font face-name="unifont Medium"/>
+    </FontSet>
+    <Style name="admin-01234">
+        <Rule>
+            <Filter>(([admin_level]=&apos;2&apos;) or ([admin_level]=&apos;3&apos;))</Filter>
+            <MinScaleDenominator>6500000</MinScaleDenominator>
+            <MaxScaleDenominator>50000000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="0.6" stroke-opacity="0.2"/>
+        </Rule>
+        <Rule>
+            <Filter>(([admin_level]=&apos;2&apos;) or ([admin_level]=&apos;3&apos;))</Filter>
+            <MinScaleDenominator>750000</MinScaleDenominator>
+            <MaxScaleDenominator>6500000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="2" stroke-opacity="0.2"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;2&apos;)</Filter>
+            <MaxScaleDenominator>750000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="6" stroke-opacity="0.1"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;3&apos;)</Filter>
+            <MaxScaleDenominator>750000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="5" stroke-opacity="0.1" stroke-dasharray="4, 2"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;4&apos;)</Filter>
+            <MinScaleDenominator>6500000</MinScaleDenominator>
+            <MaxScaleDenominator>50000000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="0.6" stroke-opacity="0.2" stroke-dasharray="4, 3"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;4&apos;)</Filter>
+            <MinScaleDenominator>400000</MinScaleDenominator>
+            <MaxScaleDenominator>6500000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-opacity="0.2" stroke-dasharray="4, 3"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;4&apos;)</Filter>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="3" stroke-opacity="0.3" stroke-dasharray="4, 3"/>
+        </Rule>
+    </Style>
+    <Style name="admin-5678">
+        <Rule>
+            <Filter>([admin_level]=&apos;5&apos;)</Filter>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="6, 3, 2, 3, 2, 3"/>
+        </Rule>
+        <Rule>
+            <Filter>([admin_level]=&apos;6&apos;)</Filter>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="2" stroke-opacity="0.2" stroke-dasharray="6, 3, 2, 3"/>
+        </Rule>
+        <Rule>
+            <Filter>(([admin_level]=&apos;8&apos;) or ([admin_level]=&apos;7&apos;))</Filter>
+            <MaxScaleDenominator>200000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="1" stroke-opacity="0.1" stroke-dasharray="5, 2"/>
+        </Rule>
+    </Style>
+    <Style name="admin-other">
+        <Rule>
+            <Filter>(([admin_level]=&apos;10&apos;) or ([admin_level]=&apos;9&apos;))</Filter>
+            <MaxScaleDenominator>100000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-width="1" stroke-opacity="0.1" stroke-dasharray="2, 3"/>
+        </Rule>
+        <Rule>
+            <Filter>not (([admin_level]!=&apos;&apos;))</Filter>
+            <MinScaleDenominator>200000</MinScaleDenominator>
+            <MaxScaleDenominator>1500000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(128,128,128)" stroke-opacity="0.1"/>
+        </Rule>
+    </Style>
+    <Style name="boundary">
+        <Rule>
+            <MinScaleDenominator>750000</MinScaleDenominator>
+            <MaxScaleDenominator>6500000</MaxScaleDenominator>
+            <PolygonSymbolizer fill="rgb(0,128,0)" fill-opacity="0.05"/>
+            <LineSymbolizer stroke="rgb(0,128,0)" stroke-width="1.5" stroke-opacity="0.15" stroke-dasharray="4, 2"/>
+        </Rule>
+        <Rule>
+            <MinScaleDenominator>100000</MinScaleDenominator>
+            <MaxScaleDenominator>750000</MaxScaleDenominator>
+            <PolygonSymbolizer fill="rgb(0,128,0)" fill-opacity="0.05"/>
+            <LineSymbolizer stroke="rgb(0,128,0)" stroke-width="3" stroke-opacity="0.15" stroke-dasharray="6, 2"/>
+        </Rule>
+        <Rule>
+            <MaxScaleDenominator>100000</MaxScaleDenominator>
+            <LineSymbolizer stroke="rgb(0,128,0)" stroke-width="3" stroke-opacity="0.15" stroke-dasharray="6, 2"/>
+        </Rule>
+        <Rule>
+            <Filter>([way_area]&gt;=200000000)</Filter>
+            <MinScaleDenominator>750000</MinScaleDenominator>
+            <MaxScaleDenominator>3000000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="14" fontset-name="bold-fonts" size="11" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <MinScaleDenominator>200000</MinScaleDenominator>
+            <MaxScaleDenominator>750000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="14" fontset-name="bold-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="capital">
+        <Rule>
+            <MinScaleDenominator>12500000</MinScaleDenominator>
+            <MaxScaleDenominator>25000000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="12" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <MinScaleDenominator>1500000</MinScaleDenominator>
+            <MaxScaleDenominator>12500000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <MinScaleDenominator>400000</MinScaleDenominator>
+            <MaxScaleDenominator>1500000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <MinScaleDenominator>25000</MinScaleDenominator>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="17" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="city">
+        <Rule>
+            <Filter>(([place]=&apos;city&apos;) or ([place]=&apos;metropolis&apos;))</Filter>
+            <MinScaleDenominator>1500000</MinScaleDenominator>
+            <MaxScaleDenominator>12500000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="11" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>(([place]=&apos;city&apos;) or ([place]=&apos;metropolis&apos;))</Filter>
+            <MinScaleDenominator>400000</MinScaleDenominator>
+            <MaxScaleDenominator>1500000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>(([place]=&apos;city&apos;) or ([place]=&apos;metropolis&apos;))</Filter>
+            <MinScaleDenominator>25000</MinScaleDenominator>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="17" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="continent">
+        <Rule>
+            <Filter>([place]=&apos;continent&apos;)</Filter>
+            <MinScaleDenominator>100000000</MinScaleDenominator>
+            <MaxScaleDenominator>500000000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="country">
+        <Rule>
+            <Filter>([place]=&apos;country&apos;)</Filter>
+            <MinScaleDenominator>50000000</MinScaleDenominator>
+            <MaxScaleDenominator>200000000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" size="11" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>([place]=&apos;country&apos;)</Filter>
+            <MinScaleDenominator>6500000</MinScaleDenominator>
+            <MaxScaleDenominator>50000000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="hamlet">
+        <Rule>
+            <Filter>(((([place]=&apos;hamlet&apos;)) or ([place]=&apos;isolated_dwelling&apos;)) or ([place]=&apos;farm&apos;))</Filter>
+            <MinScaleDenominator>12500</MinScaleDenominator>
+            <MaxScaleDenominator>50000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="11" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>(((([place]=&apos;hamlet&apos;)) or ([place]=&apos;isolated_dwelling&apos;)) or ([place]=&apos;farm&apos;))</Filter>
+            <MaxScaleDenominator>12500</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="state">
+        <Rule>
+            <Filter>([place]=&apos;state&apos;)</Filter>
+            <MinScaleDenominator>25000000</MinScaleDenominator>
+            <MaxScaleDenominator>50000000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="oblique-fonts" size="12" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[ref]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>([place]=&apos;state&apos;)</Filter>
+            <MinScaleDenominator>6500000</MinScaleDenominator>
+            <MaxScaleDenominator>25000000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="oblique-fonts" size="12" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[ref]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>([place]=&apos;state&apos;)</Filter>
+            <MinScaleDenominator>1500000</MinScaleDenominator>
+            <MaxScaleDenominator>6500000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="oblique-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[ref]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="suburb">
+        <Rule>
+            <Filter>([place]=&apos;suburb&apos;)</Filter>
+            <MinScaleDenominator>50000</MinScaleDenominator>
+            <MaxScaleDenominator>200000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>([place]=&apos;suburb&apos;)</Filter>
+            <MaxScaleDenominator>50000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="16" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="town">
+        <Rule>
+            <Filter>((([place]=&apos;town&apos;) or ([place]=&apos;large_town&apos;)) or ([place]=&apos;small_town&apos;))</Filter>
+            <MinScaleDenominator>400000</MinScaleDenominator>
+            <MaxScaleDenominator>1500000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" size="11" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>((([place]=&apos;town&apos;) or ([place]=&apos;large_town&apos;)) or ([place]=&apos;small_town&apos;))</Filter>
+            <MinScaleDenominator>50000</MinScaleDenominator>
+            <MaxScaleDenominator>400000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" size="14" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>((([place]=&apos;town&apos;) or ([place]=&apos;large_town&apos;)) or ([place]=&apos;small_town&apos;))</Filter>
+            <MaxScaleDenominator>50000</MaxScaleDenominator>
+            <TextSymbolizer wrap-width="20" fontset-name="book-fonts" size="17" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="village">
+        <Rule>
+            <Filter>(([place]=&apos;village&apos;) or ([place]=&apos;large_village&apos;))</Filter>
+            <MinScaleDenominator>25000</MinScaleDenominator>
+            <MaxScaleDenominator>200000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="12" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>(([place]=&apos;village&apos;) or ([place]=&apos;large_village&apos;))</Filter>
+            <MaxScaleDenominator>25000</MaxScaleDenominator>
+            <TextSymbolizer fontset-name="book-fonts" size="15" fill="rgb(255,255,255)" halo-radius="1" halo-fill="rgb(0,0,0)">[name]</TextSymbolizer>
+        </Rule>
+    </Style>
+
+
+    <Layer name="admin-01234" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>admin-01234</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,admin_level
+       from planet_osm_roads
+       where &quot;boundary&quot;=&apos;administrative&apos;
+         and admin_level in (&apos;0&apos;,&apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;)
+       ) as admin</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="admin-5678" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>admin-5678</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,admin_level
+       from planet_osm_roads
+       where &quot;boundary&quot;=&apos;administrative&apos;
+         and admin_level in (&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;)
+       ) as admin</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="admin-other" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>admin-other</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,admin_level
+       from planet_osm_roads
+       where &quot;boundary&quot;=&apos;administrative&apos;
+         and (admin_level is null or admin_level not in (&apos;0&apos;,&apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;))
+       ) as admin</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="placenames-capital" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>capital</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,place,name,ref
+       from planet_osm_point
+       where place in (&apos;city&apos;,&apos;metropolis&apos;,&apos;town&apos;) and capital=&apos;yes&apos;
+      ) as placenames</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="placenames-medium" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>city</StyleName>
+        <StyleName>town</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,place,name
+      from planet_osm_point
+      where place in (&apos;city&apos;,&apos;metropolis&apos;,&apos;town&apos;,&apos;large_town&apos;,&apos;small_town&apos;)
+        and (capital is null or capital != &apos;yes&apos;)
+      ) as placenames</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="placenames-large" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>country</StyleName>
+        <StyleName>state</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,place,name,ref
+       from planet_osm_point
+       where place in (&apos;country&apos;,&apos;state&apos;)
+      ) as placenames</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="placenames-small" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+        <StyleName>suburb</StyleName>
+        <StyleName>village</StyleName>
+        <StyleName>hamlet</StyleName>
+        <Datasource>
+            <Parameter name="dbname">gis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="table">(select way,place,name
+      from planet_osm_point
+      where place in (&apos;suburb&apos;,&apos;village&apos;,&apos;large_village&apos;,&apos;hamlet&apos;,&apos;locality&apos;,&apos;isolated_dwelling&apos;,&apos;farm&apos;)
+      ) as placenames</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">gis</Parameter>
+        </Datasource>
+    </Layer>
+</Map>
+

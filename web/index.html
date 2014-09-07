@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>OpenStreetMap-Gebäudeabdeckung in Österreich</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="leaflet-fullscreen/Control.FullScreen.css" />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js'></script>
+    <script src='leaflet-fullscreen/Control.FullScreen.js'></script>
+    <style type="text/css">
+        html, body, #map {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .leaflet-container {
+                background: #000;
+                }
+
+        .legend {
+            line-height: 18px;
+            color: white;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        var basemap = L.tileLayer(
+            'http://tiles.thomaskonrad.at/austria/basemap-buildings-extracted/{z}/{x}/{y}.png',
+            {
+				zIndex: 0,
+                attribution: '<a href="http://www.basemap.at">basemap.at</a>'
+            }
+        );
+        var osmBuildingsOriginal = L.tileLayer(
+            'http://tiles.thomaskonrad.at/austria/osm-buildings-only-original/{z}/{x}/{y}.png',
+            {
+				zIndex: 1,
+                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+            }
+        );
+		var osmBuildingsCurrent = L.tileLayer(
+            'http://tiles.thomaskonrad.at/austria/osm-buildings-only-current/{z}/{x}/{y}.png',
+            {
+				zIndex: 2,
+                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+            }
+        );
+        var osmCitiesBoundaries = L.tileLayer(
+            'http://tiles.thomaskonrad.at/austria/osm-places-boundaries/{z}/{x}/{y}.png',
+            {
+				zIndex: 3,
+                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+            }
+        );
+		var osmStandard = L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+				zIndex: 4,
+                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+            }
+        );
+
+		var mainLayers = {
+            'OpenStreetMap-Gebäude 2014-08-29': osmBuildingsOriginal,
+            'OpenStreetMap-Gebäude aktuell': osmBuildingsCurrent
+		};
+		
+        var overlayLayers = {
+            'basemap.at-Gebäude': basemap,
+            'OpenStreetMap Orte und Grenzen': osmCitiesBoundaries,
+			'OpenStreetMap Standard-Stil': osmStandard
+        };
+
+        var map = L.map(
+                'map',
+                {
+                    maxZoom: 16,
+                    minZoom: 6,
+                    maxBounds: L.latLngBounds(L.latLng(44.66, 4.58), L.latLng(50.38, 21.39)),
+                    layers: [ basemap, osmBuildingsOriginal, osmBuildingsCurrent, osmCitiesBoundaries ],
+					fadeAnimation: false
+                }
+        ).setView([47.7, 13.35], 8);
+
+        L.control.layers(mainLayers, overlayLayers, {position: 'bottomright', autoZIndex: false}).addTo(map);
+
+        var hash = L.hash(map);
+
+        var legend = L.control({position: 'bottomleft'});
+
+        legend.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML += '<i style="background: #f00;"></i> basemap.at-Gebäude<br />';
+            div.innerHTML += '<i style="background: #00e000;"></i> OSM-Gebäude<br />';
+            return div;
+        };
+
+        legend.addTo(map);
+
+        L.control.fullscreen({
+            position: 'topright', // change the position of the button can be topleft, topright, bottomright or bottomleft, defaut topleft
+            title: 'Toggle Full Screen', // change the title of the button, default Full Screen
+            forceSeparateButton: true, // force seperate button to detach from zoom buttons, default false
+        }).addTo(map);
+    </script>
+</body>
+</html>
