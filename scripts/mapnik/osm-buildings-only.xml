@@ -58,15 +58,16 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,building,railway,amenity from planet_osm_polygon
        where railway=&apos;station&apos;
           or building in (&apos;station&apos;,&apos;supermarket&apos;)
           or amenity=&apos;place_of_worship&apos;
        order by z_order,way_area desc) as buildings</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="buildings" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -75,8 +76,10 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,aeroway,
         case
          when building in (&apos;residential&apos;,&apos;house&apos;,&apos;garage&apos;,&apos;garages&apos;,&apos;detached&apos;,&apos;terrace&apos;,&apos;apartments&apos;) then &apos;INT-light&apos;::text
@@ -90,7 +93,6 @@
           or aeroway = &apos;terminal&apos;
        order by z_order,way_area desc) as buildings</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
 </Map>

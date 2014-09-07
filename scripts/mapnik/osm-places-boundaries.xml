@@ -262,15 +262,16 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,admin_level
        from planet_osm_roads
        where &quot;boundary&quot;=&apos;administrative&apos;
          and admin_level in (&apos;0&apos;,&apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;)
        ) as admin</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="admin-5678" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -279,15 +280,16 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,admin_level
        from planet_osm_roads
        where &quot;boundary&quot;=&apos;administrative&apos;
          and admin_level in (&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;)
        ) as admin</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="admin-other" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -296,15 +298,16 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,admin_level
        from planet_osm_roads
        where &quot;boundary&quot;=&apos;administrative&apos;
          and (admin_level is null or admin_level not in (&apos;0&apos;,&apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;))
        ) as admin</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="placenames-capital" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -313,14 +316,15 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,place,name,ref
        from planet_osm_point
        where place in (&apos;city&apos;,&apos;metropolis&apos;,&apos;town&apos;) and capital=&apos;yes&apos;
       ) as placenames</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="placenames-medium" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -330,15 +334,16 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,place,name
       from planet_osm_point
       where place in (&apos;city&apos;,&apos;metropolis&apos;,&apos;town&apos;,&apos;large_town&apos;,&apos;small_town&apos;)
         and (capital is null or capital != &apos;yes&apos;)
       ) as placenames</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="placenames-large" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -348,14 +353,15 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,place,name,ref
        from planet_osm_point
        where place in (&apos;country&apos;,&apos;state&apos;)
       ) as placenames</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
     <Layer name="placenames-small" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -366,14 +372,15 @@
             <Parameter name="dbname">gis</Parameter>
             <Parameter name="estimate_extent">false</Parameter>
             <Parameter name="extent">-20037508,-19929239,20037508,19929239</Parameter>
-            <Parameter name="host">localhost</Parameter>
+            <!--Parameter name="host">localhost</Parameter>
             <Parameter name="port">5432</Parameter>
+            <Parameter name="user">gis</Parameter>
+            <Parameter name="password"></Parameter-->
             <Parameter name="table">(select way,place,name
       from planet_osm_point
       where place in (&apos;suburb&apos;,&apos;village&apos;,&apos;large_village&apos;,&apos;hamlet&apos;,&apos;locality&apos;,&apos;isolated_dwelling&apos;,&apos;farm&apos;)
       ) as placenames</Parameter>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">gis</Parameter>
         </Datasource>
     </Layer>
 </Map>
