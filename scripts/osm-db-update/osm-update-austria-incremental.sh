@@ -25,7 +25,7 @@ osmupdate_status=$?
 
 if [ $osmupdate_status -eq 0 ]; then
 	echo "$(current_time) Creation of change file succeeded, importing data..."
-	sudo -u gis osm2pgsql --append -U gis -s -S /usr/local/share/osm2pgsql/default.style $change_file_name
+	osm2pgsql --append -U gis -s -S /usr/local/share/osm2pgsql/default.style $change_file_name
 
 	if [ $? -eq 0 ]; then
 		echo "$(current_time) Incremental update done. Moving files..."
