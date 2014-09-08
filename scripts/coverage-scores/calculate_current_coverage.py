@@ -54,7 +54,7 @@ def main():
     schema = "%d/%d/%d.png"
 
     startx = 34503
-    endx = 34510 #35892
+    endx = 35892
     starty = 22500
     endy = 23217
 
@@ -143,7 +143,15 @@ def main():
                     "(municipality_id, capture_date, total_pixels, covered_basemap_pixels, uncovered_basemap_pixels) "
                     "values ("
                     "%d, '%s', %d, %d, %d"
-                    ")" % (key, today, entry['total_pixels'], entry['covered_basemap_pixels'], entry['uncovered_basemap_pixels']))
+                    ")" %
+                    (
+                        key,
+                        today,
+                        entry['total_pixels'],
+                        entry['covered_basemap_pixels'],
+                        entry['uncovered_basemap_pixels']
+                    )
+        )
         conn.commit()
 
     print "Done."

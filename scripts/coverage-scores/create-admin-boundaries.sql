@@ -3,34 +3,34 @@ drop table austria_admin_boundaries;
 
 CREATE TABLE austria_admin_boundaries
 (
-  id serial not null,
-  admin_level integer,
-  name text,
-  abbreviation text,
-  way geometry,
-  bbox geometry,
-  tile_min_x_16 integer,
-  tile_max_x_16 integer,
-  tile_min_y_16 integer,
-  tile_max_y_16 integer,
-  way_area real,
-  gkz text,
-  color text,
-  parent integer,
-  CONSTRAINT austria_admin_boundaries_pk_id PRIMARY KEY (id)
+    id serial not null,
+    admin_level integer,
+    name text,
+    abbreviation text,
+    way geometry,
+    bbox geometry,
+    tile_min_x_16 integer,
+    tile_max_x_16 integer,
+    tile_min_y_16 integer,
+    tile_max_y_16 integer,
+    way_area real,
+    gkz text,
+    color text,
+    parent integer,
+    CONSTRAINT austria_admin_boundaries_pk_id PRIMARY KEY (id)
 );
 
 drop table if exists austria_building_coverage;
 
 CREATE TABLE austria_building_coverage
 (
-  id serial not null,
-  municipality_id integer not null,
-  capture_date date not null,
-  total_pixels integer not null,
-  covered_basemap_pixels integer not null,
-  uncovered_basemap_pixels integer not null,
-  CONSTRAINT austria_building_coverage_pk_id PRIMARY KEY (id)
+    id serial not null,
+    municipality_id integer not null,
+    capture_date date not null,
+    total_pixels integer not null,
+    covered_basemap_pixels integer not null,
+    uncovered_basemap_pixels integer not null,
+    CONSTRAINT austria_building_coverage_pk_id PRIMARY KEY (id)
 );
 
 -- Select Austrian federal states and insert them
@@ -92,6 +92,7 @@ insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gk
             or (p.admin_level='6' and p.name='Rust') -- Statutarstadt
             or (p.admin_level='6' and p.name='Eisenstadt (Stadt)') -- Statutarstadt
         )
+    and p.name != 'Graz'
     and (p.osm_id * -1) = r.id
     and r.tags::hstore ? 'ref:at:gkz'
     and r.tags::hstore ? 'name'
