@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
     echo "$(current_time) Done!"
 
 	echo "$(current_time) Scaling tiles to lower zoom levels..."
-	${DIR}scale-tiles-to-lower-zoom-levels.py ${tiles_root_dir}${tiles_dir_base_name}-current/ $zoom_level > /dev/null
+	${DIR}scale-tiles-to-lower-zoom-levels.py ${tiles_root_dir}${tiles_dir_base_name}-current/ $zoom_level
 
 	if [ $? -eq 0 ]; then
 		echo "$(current_time) Scaling tiles done."

@@ -72,8 +72,6 @@ def main():
                 os.makedirs(currentDirectory)
 
             for y in range(currentMinY, currentMaxY + 1):
-                print('We\'re on zoom level %d, tile %d / %d.' % (z, x, y))
-
                 nextX = x * 2
                 nextY = y * 2
 
@@ -105,7 +103,7 @@ def main():
                     scaled_image.paste(next_images[2], (128, 0))
                     scaled_image.paste(next_images[3], (128, 128))
 
-                    print('Image neede renewal and has been created, saving...')
+                    print('Image %d / %d on zoom level %d needed renewal and has been created, saving...' % (x, y, z))
                     scaled_image.save(current_path)
 
 
