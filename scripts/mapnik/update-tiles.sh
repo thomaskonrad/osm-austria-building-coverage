@@ -28,7 +28,7 @@ ${DIR}generate_tiles_multiprocess.py ${DIR}osm-buildings-only.xml $tiles_dir $zo
 
 if [ $? -eq 0 ]; then
     echo "$(current_time) Syncing highest zoom level with current tiles..."
-    rsync -vrtc ${tiles_dir}/${zoom_level} ${tiles_root_dir}${tiles_dir_base_name}-current/${zoom_level}
+    rsync -rtc --stats ${tiles_dir}/${zoom_level} ${tiles_root_dir}${tiles_dir_base_name}-current/${zoom_level} > /dev/null
     echo "$(current_time) Done!"
 
 	echo "$(current_time) Scaling tiles to lower zoom levels..."
