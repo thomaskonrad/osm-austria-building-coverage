@@ -26,7 +26,7 @@ CREATE TABLE austria_building_coverage
 (
     id serial not null,
     municipality_id integer not null,
-    capture_date date not null,
+    timestamp timestamp(0) not null,
     total_pixels integer not null,
     covered_basemap_pixels integer not null,
     uncovered_basemap_pixels integer not null,

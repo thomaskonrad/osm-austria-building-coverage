@@ -76,8 +76,10 @@ def main():
                 basemap_tile = Image.open(basemap_tile_path).load()
                 osm_tile = Image.open(osm_tile_path).convert('RGBA').load()
 
-                cur.execute("select id, name, color from austria_admin_boundaries "
-                            "where admin_level = 3 and "
+                cur.execute("select b.id, b.name, b.color, c.timestamp "
+                            "from austria_admin_boundaries, austria_building_coverage c "
+                            "where c.municipality_id = b.id and "
+                            "admin_level = 3 and "
                             "tile_min_x_16 <= %d and "
                             "tile_max_x_16 >= %d and "
                             "tile_min_y_16 <= %d and "
