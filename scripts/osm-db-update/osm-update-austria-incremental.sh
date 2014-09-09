@@ -2,6 +2,7 @@
 
 # The working directory
 DIR=$1
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function current_time()
 {
@@ -19,7 +20,7 @@ new_file_name=$DIR/austria-latest-new.osm.pbf
 
 echo "$(current_time) ### STARTING OSM AUSTRIA INCREMENTAL UPDATE"
 
-osmupdate $file_name $change_file_name -v --base-url=http://download.geofabrik.de/europe/austria-updates/
+osmupdate $file_name $change_file_name -v --base-url=http://download.geofabrik.de/europe/austria-updates/ --tempfiles="${SCRIPTDIR}/osmupdate_temp/temp"
 
 osmupdate_status=$?
 
