@@ -144,8 +144,6 @@ def main():
         sys.exit(1)
 
     rows = cur.fetchall()
-    total = len(rows)
-    processed = 0
 
     for municipality in rows:
         id = municipality[0]
@@ -168,6 +166,8 @@ def main():
             zoom)
 
         if len(rows) == 0 or rows[0][1] < latest_timestamp:
+            print "Municipality %s (ID %d) is out of date. Updating..." % (name, id)
+
             (total_pixels_full, covered_basemap_pixels_full, uncovered_basemap_pixels_full) = \
                 calculate_coverage_full_tiles(basemap_tiles_path, osm_tiles_path, zoom, schema, tile_size, full_tiles)
 
@@ -200,13 +200,6 @@ def main():
                 cur.execute("update austria_building_coverage set timestamp = to_timestamp(%.0f) "
                             "where id = %d" % (latest_timestamp, rows[0][0]))
                 conn.commit()
-
-        else:
-            print "Municipality %s is already up to date." % name
-
-        processed += 1
-        percent = float(processed) / float(total) * float(100)
-        print(" --- Processed %d / %d (%.3f percent)" % (processed, total, percent))
 
 
 if __name__ == "__main__":main()
