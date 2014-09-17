@@ -78,19 +78,20 @@ def calculate_coverage_partial_tiles(municipality_tiles_path, basemap_tiles_path
     return total_pixels, covered_basemap_pixels, uncovered_basemap_pixels
 
 
-def get_latest_timestamp(tile_indices, full_schema, zoom):
+def get_latest_timestamp(tile_indices, full_schemata, zoom):
     latest_timestamp = 0
 
-    for index in tile_indices:
-        x = index[0]
-        y = index[1]
+    for full_schema in full_schemata:
+        for index in tile_indices:
+            x = index[0]
+            y = index[1]
 
-        tile_path = full_schema % (zoom, x, y)
+            tile_path = full_schema % (zoom, x, y)
 
-        if os.path.exists(tile_path):
-            timestamp = os.path.getmtime(tile_path)
-            if timestamp > latest_timestamp:
-                latest_timestamp = timestamp
+            if os.path.exists(tile_path):
+                timestamp = os.path.getmtime(tile_path)
+                if timestamp > latest_timestamp:
+                    latest_timestamp = timestamp
 
     return latest_timestamp
 
@@ -158,7 +159,13 @@ def main():
                     "where municipality_id=%d" % id)
         rows = cur.fetchall()
 
-        latest_timestamp = get_latest_timestamp(full_tiles + partial_tiles, osm_tiles_path + schema, zoom)
+        latest_timestamp = get_latest_timestamp(
+            full_tiles + partial_tiles,
+            [
+                basemap_tiles_path + schema,
+                osm_tiles_path + schema,
+            ],
+            zoom)
 
         if len(rows) == 0 or rows[0][1] < latest_timestamp:
             (total_pixels_full, covered_basemap_pixels_full, uncovered_basemap_pixels_full) = \
