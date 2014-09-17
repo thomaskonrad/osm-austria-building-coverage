@@ -20,7 +20,7 @@ new_file_name=$DIR/austria-latest-new.osm.pbf
 
 echo "$(current_time) ### STARTING OSM AUSTRIA INCREMENTAL UPDATE"
 
-osmupdate $file_name $change_file_name -v --base-url=http://download.geofabrik.de/europe/austria-updates/ --tempfiles="${SCRIPTDIR}/osmupdate_temp/temp"
+osmupdate $file_name $change_file_name -v --base-url=http://download.geofabrik.de/europe/austria-updates/ --tempfiles="/tmp/osmupdate_temp"
 
 osmupdate_status=$?
 
@@ -46,4 +46,3 @@ elif [ $osmupdate_status -eq 21 ]; then
 else
 	echo "$(current_time) Something went wrong wile updating. Please see the log file."
 fi
-
