@@ -3,6 +3,7 @@ import sys
 import Image
 import os
 import struct
+import math
 
 
 def hex2rgb(hex):
@@ -94,7 +95,7 @@ def get_latest_timestamp(tile_indices, full_schemata, zoom):
                     latest_timestamp = timestamp
     
     # We only need seconds precision
-    return round(latest_timestamp)
+    return math.floor(latest_timestamp)
 
 
 def main():
