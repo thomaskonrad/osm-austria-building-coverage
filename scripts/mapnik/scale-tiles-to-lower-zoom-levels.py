@@ -26,7 +26,7 @@ def get_image_or_transparent(path, width=256, height=256):
 
 def is_file_newer_than(file1, file2):
     if os.path.exists(file1) and os.path.exists(file2):
-        return os.path.getctime(file1) > os.path.getctime(file2)
+        return os.path.getmtime(file1) > os.path.getmtime(file2)
 
     if not os.path.exists(file1):
         return False
