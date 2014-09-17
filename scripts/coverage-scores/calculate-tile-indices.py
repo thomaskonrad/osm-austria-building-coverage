@@ -36,7 +36,7 @@ def main():
         sys.exit(1)
 
     tile_size = 256
-    insert_statement_file = "calculate_tile_indices_inserts.sql"
+    insert_statement_file = "calculate-tile-indices-inserts.sql"
 
     # Try to connect
     try:
