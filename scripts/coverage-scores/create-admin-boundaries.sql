@@ -1,7 +1,9 @@
--- Drop and recreate table
+-- Make sure you install the PostGIS and hstore extensions before running this script!
+
+-- Drop and recreate tables
 drop table austria_admin_boundaries;
 
-CREATE TABLE austria_admin_boundaries
+create table austria_admin_boundaries
 (
     id serial not null,
     admin_level integer,
@@ -9,10 +11,8 @@ CREATE TABLE austria_admin_boundaries
     abbreviation text,
     way geometry,
     bbox geometry,
-    tile_min_x_16 integer,
-    tile_max_x_16 integer,
-    tile_min_y_16 integer,
-    tile_max_y_16 integer,
+    full_tiles integer[][],
+    partial_tiles integer[][],
     way_area real,
     gkz text,
     color text,
@@ -22,11 +22,11 @@ CREATE TABLE austria_admin_boundaries
 
 drop table if exists austria_building_coverage;
 
-CREATE TABLE austria_building_coverage
+create table austria_building_coverage
 (
     id serial not null,
     municipality_id integer not null,
-    timestamp timestamp(0) not null,
+    timestamp timestamptz(0) not null,
     total_pixels integer not null,
     covered_basemap_pixels integer not null,
     uncovered_basemap_pixels integer not null,
@@ -113,13 +113,33 @@ insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gk
     left join austria_admin_boundaries parent on (parent.admin_level=2 and ST_Within(p.way, parent.way))
     where p.boundary='administrative' and p.admin_level='9'
     and (p.osm_id * -1) = r.id
-    and parent.name in ('Wien', 'Graz', 'Klagenfurt (Stadt)') -- Only these cities have complete district polygons
+    and parent.name in ('Wien', 'Graz') -- Only these cities have complete district polygons
     order by gkz
 );
 
--- Set a (hopefully) different color for each boundary
-update austria_admin_boundaries set color='#'||substring(encode(digest(name, 'sha256'), 'hex') from 1 for 6);
+-- Remove leading "Gemeinde", "Markgemeinde", "Stadtgemeinde" and "Bezirk" strings
+update austria_admin_boundaries
+set name = substring(name from 10 for length(name) - 9)
+where name like 'Gemeinde %';
 
--- Special cases: [DONE] Rust (Statutarstadt), [DONE] Neusiedl am See (split in two), [DONE] Eisenstadt,
--- [DONE] Naarn im Machlande (not here but in OSM), [DONE] Perg (not here but in OSM), [DONE] Kulm am Zirbitz (not in OSM)
--- [DONE] Kleinlobming (not in OSM), [DONE] Reisstraße (not here but in OSM), [DONE] Großsölk (not in OSM, Sölk?)
+update austria_admin_boundaries
+set name = substring(name from 15 for length(name) - 14)
+where name like 'Marktgemeinde %';
+
+update austria_admin_boundaries
+set name = substring(name from 15 for length(name) - 14)
+where name like 'Stadtgemeinde %';
+
+update austria_admin_boundaries
+set name = substring(name from 8 for length(name) - 7)
+where name like 'Bezirk %';
+
+-- Append the city or district name in parenthesis where the municipality name is ambiguous
+update austria_admin_boundaries m
+set name = m.name || ' (' || p.name || ')'
+from austria_admin_boundaries p
+where m.parent = p.id and
+m.name in ('Innere Stadt', 'Liebenau', 'Mühldorf', 'Lend', 'Warth', 'Krumbach');
+
+-- Set a (hopefully) different color for each boundary
+update austria_admin_boundaries set color='#' || substring(encode(digest(name, 'sha256'), 'hex') from 1 for 6);
