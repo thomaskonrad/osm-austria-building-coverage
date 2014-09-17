@@ -92,8 +92,9 @@ def get_latest_timestamp(tile_indices, full_schemata, zoom):
                 timestamp = os.path.getmtime(tile_path)
                 if timestamp > latest_timestamp:
                     latest_timestamp = timestamp
-
-    return latest_timestamp
+    
+    # We only need seconds precision
+    return round(latest_timestamp)
 
 
 def main():
@@ -118,9 +119,8 @@ def main():
     try:
         if len(sys.argv) == 7:
             conn = psycopg2.connect(
-                host=sys.argv[4],
                 database=sys.argv[5],
-                user=sys.argv[6]
+                user=sys.argv[6],
             )
         elif len(sys.argv) == 8:
             conn = psycopg2.connect(
@@ -139,11 +139,12 @@ def main():
         cur.execute("SELECT id, name, full_tiles, partial_tiles, color "
                     "from austria_admin_boundaries "
                     "where admin_level=3")
-    except:
-        print "I can't SELECT!"
+    except Exception as e:
+        print "I can't SELECT! (%s)" % str(e)
         sys.exit(1)
 
     rows = cur.fetchall()
+    print "%d municipalities found." % len(rows)
 
     for municipality in rows:
         id = municipality[0]
@@ -152,10 +153,14 @@ def main():
         partial_tiles = municipality[3]
         color = municipality[4]
 
-        cur.execute("select id, extract(epoch from timestamp), covered_basemap_pixels, uncovered_basemap_pixels "
-                    "from austria_building_coverage "
-                    "where municipality_id=%d" % id)
-        rows = cur.fetchall()
+        cur.execute("select c1.id, extract(epoch from c1.timestamp), c1.covered_basemap_pixels, "
+                    "c1.uncovered_basemap_pixels "
+                    "from austria_building_coverage c1 "
+                    "where municipality_id = %d "
+                    "and timestamp = "
+                    "(select max(timestamp) from austria_building_coverage c2 "
+                    "where c2.municipality_id = c1.municipality_id)" % id)
+        coverage_rows = cur.fetchall()
 
         latest_timestamp = get_latest_timestamp(
             full_tiles + partial_tiles,
@@ -165,7 +170,7 @@ def main():
             ],
             zoom)
 
-        if len(rows) == 0 or rows[0][1] < latest_timestamp:
+        if len(coverage_rows) == 0 or coverage_rows[0][1] < latest_timestamp:
             print "Municipality %s (ID %d) is out of date. Updating..." % (name, id)
 
             (total_pixels_full, covered_basemap_pixels_full, uncovered_basemap_pixels_full) = \
@@ -179,7 +184,7 @@ def main():
             total_pixels = total_pixels_partial + total_pixels_full
 
             # Only insert the values if no entry exists yet or if the values have actually changed
-            if len(rows) == 0 or rows[0][2] != covered_basemap_pixels or rows[0][3] != uncovered_basemap_pixels:
+            if len(coverage_rows) == 0 or coverage_rows[0][2] != covered_basemap_pixels or coverage_rows[0][3] != uncovered_basemap_pixels:
                 cur.execute("insert into austria_building_coverage "
                     "(municipality_id, timestamp, total_pixels, covered_basemap_pixels, uncovered_basemap_pixels) "
                     "values ("
@@ -196,9 +201,10 @@ def main():
                 conn.commit()
             else:
                 print "The latest timestamp of the tiles of municipality %s has changed but these changes did not " \
-                      "affect this municipality. Only updating the timestsamp of entry %d." % (name, rows[0][0])
-                cur.execute("update austria_building_coverage set timestamp = to_timestamp(%.0f) "
-                            "where id = %d" % (latest_timestamp, rows[0][0]))
+                      "affect this municipality. Only updating the timestsamp of entry %d." % (name, coverage_rows[0][0])
+                statement = "update austria_building_coverage set timestamp = to_timestamp(%.0f) " \
+                            "where id = %d" % (latest_timestamp, coverage_rows[0][0])
+                cur.execute(statement)
                 conn.commit()
 
 
