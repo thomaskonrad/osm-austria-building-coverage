@@ -38,7 +38,9 @@ if [ $? -eq 0 ]; then
 		echo "$(current_time) Scaling tiles done."
 	else
 		echo "$(current_time) Scaling tiles failed."
+		exit 1
 	fi
 else
 	echo "$(current_time) Rendering tiles failed."
+	exit 1
 fi

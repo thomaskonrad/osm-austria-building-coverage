@@ -99,10 +99,10 @@ def get_latest_timestamp(tile_indices, full_schemata, zoom):
 
 
 def main():
-    if len(sys.argv) < 7 or len(sys.argv) > 8:
+    if len(sys.argv) < 5 or len(sys.argv) > 8:
         print "Usage: ./update-coverage.py <municipality-tiles-path> <basemap-tiles-path> <osm-tiles-path> " \
-              "<hostname> <dbname> <user> [<password>] # Paths with trailing slashes please. The DB password is " \
-              "optional. If none is given, we'll try to connect without a password."
+              "[<hostname>] <dbname> [<user>] [<password>] # Paths with trailing slashes please. The DB host, username " \
+              "and password are optional. If none is given, we'll try to connect without a password."
         sys.exit(1)
 
     municipality_tiles_path = sys.argv[1]
@@ -118,17 +118,16 @@ def main():
 
     # Try to connect
     try:
-        if len(sys.argv) == 7:
+        if len(sys.argv) == 5:
             conn = psycopg2.connect(
                 database=sys.argv[5],
-                user=sys.argv[6],
             )
         elif len(sys.argv) == 8:
             conn = psycopg2.connect(
-                host=sys.argv[4],
-                database=sys.argv[5],
-                user=sys.argv[6],
-                password=sys.argv[7]
+                host=sys.argv[5],
+                database=sys.argv[6],
+                user=sys.argv[7],
+                password=sys.argv[8]
             )
     except Exception as e:
         print "I am unable to connect to the database (%s)." % e.message
