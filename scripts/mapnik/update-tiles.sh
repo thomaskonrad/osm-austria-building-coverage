@@ -8,10 +8,6 @@ function current_time()
 	date +%Y-%m-%d_%H:%M:%S
 }
 
-log_file=~/logs/update-tiles-$(current_time).log
-exec >  >(tee -a ${log_file})
-exec 2> >(tee -a ${log_file} >&2)
-
 echo "$(current_time) Starting with OSM Austria Building Coverage tile update"
 
 tiles_root_dir=$1
