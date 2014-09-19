@@ -122,7 +122,7 @@ def main():
     try:
         if len(sys.argv) == 5:
             conn = psycopg2.connect(
-                database=sys.argv[5],
+                database=sys.argv[4],
             )
         elif len(sys.argv) == 8:
             conn = psycopg2.connect(
