@@ -141,5 +141,54 @@ from austria_admin_boundaries p
 where m.parent = p.id and
 m.name in ('Innere Stadt', 'Liebenau', 'Mühldorf', 'Lend', 'Warth', 'Krumbach');
 
+-- Give the city districts of Graz an "artificial" GKZ
+update austria_admin_boundaries set gkz = '60201' where name = 'Innere Stadt (Graz)';
+update austria_admin_boundaries set gkz = '60202' where name = 'St. Leonhard';
+update austria_admin_boundaries set gkz = '60203' where name = 'Geidorf';
+update austria_admin_boundaries set gkz = '60204' where name = 'Lend (Graz)';
+update austria_admin_boundaries set gkz = '60205' where name = 'Gries';
+update austria_admin_boundaries set gkz = '60206' where name = 'Jakomini';
+update austria_admin_boundaries set gkz = '60207' where name = 'Liebenau (Graz)';
+update austria_admin_boundaries set gkz = '60208' where name = 'St. Peter';
+update austria_admin_boundaries set gkz = '60209' where name = 'Waltendorf';
+update austria_admin_boundaries set gkz = '60210' where name = 'Ries';
+update austria_admin_boundaries set gkz = '60211' where name = 'Mariatrost';
+update austria_admin_boundaries set gkz = '60212' where name = 'Andritz';
+update austria_admin_boundaries set gkz = '60213' where name = 'Gösting';
+update austria_admin_boundaries set gkz = '60214' where name = 'Eggenberg';
+update austria_admin_boundaries set gkz = '60215' where name = 'Wetzelsdorf';
+update austria_admin_boundaries set gkz = '60216' where name = 'Straßgang';
+update austria_admin_boundaries set gkz = '60217' where name = 'Puntigam';
+
 -- Set a (hopefully) different color for each boundary
 update austria_admin_boundaries set color='#' || substring(encode(digest(name, 'sha256'), 'hex') from 1 for 6);
+
+-- Create indexes
+CREATE INDEX idx_austria_admin_boundaries_name
+ON austria_admin_boundaries (name);
+
+CREATE INDEX idx_austria_admin_boundaries_gkz
+ON austria_admin_boundaries (gkz);
+
+CREATE INDEX idx_austria_admin_boundaries_parent
+ON austria_admin_boundaries (parent);
+
+CREATE INDEX idx_austria_building_coverage_municipality_id -- This one is really important
+ON austria_building_coverage (municipality_id);
+
+CREATE INDEX idx_austria_building_coverage_timestamp
+ON austria_building_coverage (timestamp);
+
+-- Create views
+create or replace view municipality_coverage as
+select b.gkz, b.name as municipality_name, p.id as parent_id, p.name as parenet_name,
+    max(c.timestamp) as latest_timestamp, sum(c.total_pixels) as total_pixels,
+    (sum(c.covered_basemap_pixels)::float / (sum(c.covered_basemap_pixels) + sum(c.uncovered_basemap_pixels)) * 100.0) as coverage
+from austria_building_coverage c
+left join austria_admin_boundaries b on (c.municipality_id = b.id)
+left join austria_admin_boundaries p on (b.parent = p.id)
+where c.timestamp = (
+    select max(timestamp) from austria_building_coverage c1
+    where c.municipality_id = c1.municipality_id)
+group by b.gkz, b.name, p.id, p.name
+order by coverage desc
