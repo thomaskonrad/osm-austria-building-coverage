@@ -354,4 +354,4 @@ select 0 as id, 0::int as admin_level, 'Österreich'::text as name, 1::int as ra
 from simplified_polygon s,
   coverage_score_base csb
 where s.id = 0 and s.admin_level = 0
-group by s.polygon, s.bbox
+group by s.polygon, s.bbox;
