@@ -1,0 +1,9 @@
+Nicht zum Commit vorgemerkte Änderungen nach Zurücksetzung:
+M	map/templates/map.html
+M	scripts/coverage-scores/calculate-tile-indices.py
+M	scripts/coverage-scores/municipalities-cartocss.py
+M	scripts/coverage-scores/update-coverage.py
+M	scripts/coverage-scores/update-materialized-views.py
+M	scripts/mapnik/generate_tiles_multiprocess.py
+M	scripts/mapnik/scale-tiles-to-lower-zoom-levels.py
+M	scripts/update-all.sh

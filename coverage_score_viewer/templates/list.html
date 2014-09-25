@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+    <h1>{{ admin_level_heading }}</h1>
+
+    <p>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Coverage</th>
+                <th>Gain</th>
+            </tr>
+            {% for boundary in boundaries %}
+                <tr>
+                    <td>{{ boundary.rank }}.</td>
+                    <td><a href="{% url "overage_score_viewer.views.show" boundary.id %}">{{ boundary }}</a></td>
+                    <td>{{ boundary.coverage|floatformat:2 }} %</td>
+                    <td>{{ boundary.total_coverage_gain|floatformat:2 }} %</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </p>
+{% endblock %}

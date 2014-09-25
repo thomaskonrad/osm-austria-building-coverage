@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block jumbotron %}
+
+    {% include 'map_jumbotron.html' with coverage_boundary=country %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <h2>States</h2>
+            {% if states %}
+                <p>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Coverage</th>
+                        </tr>
+                        {% for state in states %}
+                            <tr>
+                                <td>{{ state.rank }}.</td>
+                                <td><a href="{% url "coverage_score_viewer.views.show" state.id %}">{{ state }}</a></td>
+                                <td>{{ state.coverage|floatformat:2 }} %</td>
+                            </tr>
+                        {% endfor %}
+
+                        {% if country %}
+                            <tr>
+                                <td></td>
+                                <td><strong>{{ country }} (Total)</strong></td>
+                                <td><strong>{{ country.coverage|floatformat:2 }} %</strong></td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </p>
+                <p>
+                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.states' %}">
+                        See all states <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </p>
+            {% else %}
+                <p>No states could be found.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h2>Top 10 Districts</h2>
+            {% if top_10_districts %}
+                <p>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Coverage</th>
+                        </tr>
+                        {% for district in top_10_districts %}
+                            <tr>
+                                <td>{{ district.rank }}.</td>
+                                <td><a href="{% url 'coverage_score_viewer.views.show' district.id %}">{{ district }}</a></td>
+                                <td>{{ district.coverage|floatformat:2 }} %</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </p>
+                <p>
+                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.districts' %}">
+                        See all districts <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </p>
+            {% else %}
+                <p>No districts could be found.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h2>Top 10 Municipalities</h2>
+            {% if top_10_municipalities %}
+                <p>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Coverage</th>
+                        </tr>
+                        {% for municipality in top_10_municipalities %}
+                            <tr>
+                                <td>{{ municipality.rank }}.</td>
+                                <td><a href="{% url 'coverage_score_viewer.views.show' municipality.id %}">{{ municipality }}</a></td>
+                                <td>{{ municipality.coverage|floatformat:2 }} %</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </p>
+                <p>
+                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.municipalities' %}">
+                        See all municipalities <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </p>
+            {% else %}
+                <p>No municipalities could be found.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

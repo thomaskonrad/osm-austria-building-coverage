@@ -1,0 +1,14 @@
+<div class="map">
+    <div class="stats-wrapper container">
+        <div class="stats">
+            <span class="coverage-text">{{ coverage_boundary }} has a total building coverage of</span><br />
+            <span class="coverage-score">{{ coverage_boundary.coverage|floatformat:2 }} %</span><br />
+            <span class="coverage-gain {% if coverage_boundary.total_coverage_gain >= 0 %}positive{% endif %}">
+                compared to <a href="http://www.basemap.at">basemap.at</a>. That's a gain of
+                {{ coverage_boundary.total_coverage_gain|floatformat:+2 }} %
+                since the beginning of this service.
+            </span>
+        </div>
+    </div>
+    <iframe src="/map/?disable_scroll_whell_zoom=true&boundary_id={{ coverage_boundary.id }}#8/47.699/13.348" width="100%" height="500px" seamless="true" allowfullscreen="true" webkitallowfullscreen="true" frameborder="none"></iframe>
+</div>

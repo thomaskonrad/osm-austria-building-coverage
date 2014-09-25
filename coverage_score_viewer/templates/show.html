@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block jumbotron %}
+    {% include 'map_jumbotron.html' with coverage_boundary=coverage_boundary %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {{ coverage_boundary }}
+        {% if coverage_boundary.parent %}
+            (<a href="{% url "coverage_score_viewer.views.show" coverage_boundary.parent.id %}">{{ coverage_boundary.parent }}</a>)
+        {% endif %}
+    </h1>
+
+    <p>{{ coverage_boundary.coverage|floatformat:2 }} % of all buildings on
+        <a href="http://www.basemap.at">basemap.at</a> in the {{ coverage_boundary.admin_level_string }} of
+        {{ coverage_boundary }} are covered by a building on <a href="http://www.openstreetmap.org">OpenStreetMap</a>
+        in the same area. The table below shows some details.</p>
+
+    <table class="table table-bordered table-nonfluid table-headings-left">
+        <tbody>
+            <tr>
+                <th>Total coverage</th>
+                <td>{{ coverage_boundary.coverage|floatformat:2 }} %</td>
+            </tr>
+            <tr>
+                <th>Original coverage</th>
+                <td>{{ coverage_boundary.original_coverage|floatformat:2 }} %</td>
+            </tr>
+            <tr>
+                <th>Total coverage gain</th>
+                <td>{{ coverage_boundary.total_coverage_gain|floatformat:2 }} %</td>
+            </tr>
+            <tr>
+                <th>Latest changes</th>
+                <td>{{ coverage_boundary.latest_timestamp|date:"F d, Y" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if children %}
+        <h2>{{ coverage_boundary.children_admin_level_string }}</h2>
+
+        <table class="table table-bordered table-striped table-nonfluid">
+            <tr>
+                <th>Overall Rank</th>
+                <th>Name</th>
+                <th>Coverage</th>
+                <th>Gain</th>
+            </tr>
+            {% for child in children %}
+                <tr>
+                    <td>{{ child.rank }}.</td>
+                    <td><a href="{% url "coverage_score_viewer.views.show" child.id %}">{{ child }}</a></td>
+                    <td>{{ child.coverage|floatformat:2 }} %</td>
+                    <td>{{ child.total_coverage_gain|floatformat:2 }} %</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
