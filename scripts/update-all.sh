@@ -43,5 +43,8 @@ if [ ${exit_code} -eq 0 ]; then
         ${scriptdir}coverage-scores/update-coverage.py ${municipality_tiles_path} ${basemap_tiles_path} ${osm_tiles_path} ${database_name}
         exit_code=$?
         echo "$(current_time) Incremental coverage scores update: Process finished with exit code ${exit_code}."
+
+        # Refresh the coverage score views
+        ${scriptdir}coverage-scores/update-materialized-views.py ${database_name}
     fi
 fi
