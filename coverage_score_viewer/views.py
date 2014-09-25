@@ -38,10 +38,10 @@ def list(request, admin_level):
     return render(request, 'list.html', context)
 
 
-def show(request, boundary_id):
+def details(request, boundary_id):
     coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
 
-    return render(request, 'show.html', {
+    return render(request, 'details.html', {
         'coverage_boundary': coverage_boundary,
         'children': CoverageBoundary.objects.filter(parent=coverage_boundary).order_by('rank')
     })

@@ -21,7 +21,7 @@
                         {% for state in states %}
                             <tr>
                                 <td>{{ state.rank }}.</td>
-                                <td><a href="{% url "coverage_score_viewer.views.show" state.id %}">{{ state }}</a></td>
+                                <td><a href="{% url "coverage_score_viewer.views.details" state.id %}">{{ state }}</a></td>
                                 <td>{{ state.coverage|floatformat:2 }} %</td>
                             </tr>
                         {% endfor %}
@@ -57,7 +57,7 @@
                         {% for district in top_10_districts %}
                             <tr>
                                 <td>{{ district.rank }}.</td>
-                                <td><a href="{% url 'coverage_score_viewer.views.show' district.id %}">{{ district }}</a></td>
+                                <td><a href="{% url 'coverage_score_viewer.views.details' district.id %}">{{ district }}</a></td>
                                 <td>{{ district.coverage|floatformat:2 }} %</td>
                             </tr>
                         {% endfor %}
@@ -85,7 +85,7 @@
                         {% for municipality in top_10_municipalities %}
                             <tr>
                                 <td>{{ municipality.rank }}.</td>
-                                <td><a href="{% url 'coverage_score_viewer.views.show' municipality.id %}">{{ municipality }}</a></td>
+                                <td><a href="{% url 'coverage_score_viewer.views.details' municipality.id %}">{{ municipality }}</a></td>
                                 <td>{{ municipality.coverage|floatformat:2 }} %</td>
                             </tr>
                         {% endfor %}

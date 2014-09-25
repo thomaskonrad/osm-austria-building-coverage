@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     url(r'^districts/$', 'coverage_score_viewer.views.districts', name='districts'),
     url(r'^municipalities/$', 'coverage_score_viewer.views.municipalities', name='municipalities'),
 
-    url(r'^details/(?P<boundary_id>\d+)$', 'coverage_score_viewer.views.show', name='show'),
+    url(r'^details/(?P<boundary_id>\d+)$', 'coverage_score_viewer.views.details', name='details'),
     url(r'^search$', 'coverage_score_viewer.views.search', name='search'),
 
     url(r'^map/$', 'map.views.map', name='map'),

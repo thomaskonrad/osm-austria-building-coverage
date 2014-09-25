@@ -8,7 +8,7 @@
     <h1>
         {{ coverage_boundary }}
         {% if coverage_boundary.parent %}
-            (<a href="{% url "coverage_score_viewer.views.show" coverage_boundary.parent.id %}">{{ coverage_boundary.parent }}</a>)
+            (<a href="{% url "coverage_score_viewer.views.details" coverage_boundary.parent.id %}">{{ coverage_boundary.parent }}</a>)
         {% endif %}
     </h1>
 
@@ -51,7 +51,7 @@
             {% for child in children %}
                 <tr>
                     <td>{{ child.rank }}.</td>
-                    <td><a href="{% url "coverage_score_viewer.views.show" child.id %}">{{ child }}</a></td>
+                    <td><a href="{% url "coverage_score_viewer.views.details" child.id %}">{{ child }}</a></td>
                     <td>{{ child.coverage|floatformat:2 }} %</td>
                     <td>{{ child.total_coverage_gain|floatformat:2 }} %</td>
                 </tr>
