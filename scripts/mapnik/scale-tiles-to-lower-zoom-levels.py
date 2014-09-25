@@ -9,8 +9,8 @@ def get_transparent_image(width=256, height=256):
     transparent = Image.new('RGBA', (256, 256))
 
     data = []
-    for x in range(0, width):
-        for y in range(0, height):
+    for x in range(width):
+        for y in range(height):
             data.append((255, 255, 255, 0))
 
     transparent.putdata(data)
@@ -34,7 +34,7 @@ def is_file_newer_than(file1, file2):
 
 def main():
     if len(sys.argv) < 3:
-        print "Usage: ./scale-tiles-to-lower-zoom-levels.py <tiles_path> <starting_zoom_level>"
+        print("Usage: ./scale-tiles-to-lower-zoom-levels.py <tiles_path> <starting_zoom_level>")
         sys.exit(1)
 
     starting_zoom_level = int(sys.argv[2])

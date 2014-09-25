@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import psycopg2
 import math
@@ -25,16 +25,16 @@ def hex2rgb(hex):
 
 def main():
     if len(sys.argv) < 5 or len(sys.argv) > 6:
-        print "Usage: ./calculate_tile-indices.py <municipality tiles path including trailing slash>  <hostname> " \
+        print("Usage: ./calculate_tile-indices.py <municipality tiles path including trailing slash>  <hostname> " \
               "<dbname> <user> [<password>] # The DB password is optional. If none is given, we'll try to  connect " \
-              "without a password."
+              "without a password.")
         sys.exit(1)
 
     zoom_level = 16
     tile_path = sys.argv[1] + "%d/" % zoom_level
 
     if not os.path.exists(tile_path):
-        print "The municipality tiles path given does not exist."
+        print("The municipality tiles path given does not exist.")
         sys.exit(1)
 
     tile_size = 256
@@ -56,7 +56,7 @@ def main():
                 password=sys.argv[5]
             )
     except Exception as e:
-        print "I am unable to connect to the database (%s)." % e.message
+        print("I am unable to connect to the database (%s)." % e.message)
         sys.exit(1)
 
     cur = conn.cursor()
@@ -67,7 +67,7 @@ def main():
                     "where admin_level=3 "
                     "and (full_tiles is null or partial_tiles is null)")
     except:
-        print "I can't SELECT!"
+        print("I can't SELECT!")
 
     rows = cur.fetchall()
     total = len(rows)
@@ -81,7 +81,7 @@ def main():
 
         processed += 1
         percent = float(processed) / float(total) * float(100)
-        print "Processing municipality %s (%d of %d, %.2f percent)." % (name, processed, total, percent)
+        print("Processing municipality %s (%d of %d, %.2f percent)." % (name, processed, total, percent))
 
         data = {
             'name': name,
@@ -118,8 +118,8 @@ def main():
                         contains_color = False
                         full_tile = True
 
-                        for pixel_y in xrange(tile_size):
-                            for pixel_x in xrange(tile_size):
+                        for pixel_y in range(tile_size):
+                            for pixel_x in range(tile_size):
                                 (pr, pg, pb) = municipality_tile[pixel_x, pixel_y]
 
                                 if mr == pr and mg == pg and mb == pb:
@@ -151,7 +151,7 @@ def main():
             conn.commit()
 
         else:
-            print "Municipality %s (ID %s) could not be processed, no bbox found." % (name, id)
+            print("Municipality %s (ID %s) could not be processed, no bbox found." % (name, id))
 
 
 if __name__ == "__main__":main()

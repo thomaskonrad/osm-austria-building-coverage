@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import psycopg2
 import sys
@@ -8,8 +8,8 @@ import sys
 
 # Try to connect
 if len(sys.argv) < 4 or len(sys.argv) > 5:
-    print "Usage: ./municipalities-cartocss.py <hostname> <dbname> <user> [<password>] " \
-          "# The DB password is optional. If none is given, we'll try to connect without a password."
+    print("Usage: ./municipalities-cartocss.py <hostname> <dbname> <user> [<password>] " \
+          "# The DB password is optional. If none is given, we'll try to connect without a password.")
     sys.exit(1)
 
 # Try to connect
@@ -28,7 +28,7 @@ try:
             password=sys.argv[4]
         )
 except Exception as e:
-    print "I am unable to connect to the database (%s)." % e.message
+    print("I am unable to connect to the database (%s)." % e.message)
     sys.exit(1)
 
 cur = conn.cursor()
@@ -36,8 +36,8 @@ cur = conn.cursor()
 try:
     cur.execute('SELECT id, color from austria_admin_boundaries where admin_level=3')
 except:
-    print "I can't SELECT from bar"
+    print("I can't SELECT from bar")
 
 rows = cur.fetchall()
 for row in rows:
-    print "[id=%s] {polygon-fill: %s}" % (row[0], row[1])
+    print("[id=%s] {polygon-fill: %s}" % (row[0], row[1]))

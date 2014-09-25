@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import psycopg2
 import sys
@@ -29,8 +29,8 @@ def calculate_coverage_full_tiles(basemap_tiles_path, osm_tiles_path, zoom, sche
         basemap_tile = Image.open(basemap_tile_path).load()
         osm_tile = Image.open(osm_tile_path).convert('RGBA').load()
 
-        for pixel_y in xrange(tile_size):
-            for pixel_x in xrange(tile_size):
+        for pixel_y in range(tile_size):
+            for pixel_x in range(tile_size):
                 total_pixels += 1
                 (cbr, cbg, cbb, cba) = basemap_tile[pixel_x, pixel_y]
                 (cor, cog, cob, coa) = osm_tile[pixel_x, pixel_y]
@@ -63,8 +63,8 @@ def calculate_coverage_partial_tiles(municipality_tiles_path, basemap_tiles_path
         basemap_tile = Image.open(basemap_tile_path).load()
         osm_tile = Image.open(osm_tile_path).convert('RGBA').load()
 
-        for pixel_y in xrange(tile_size):
-            for pixel_x in xrange(tile_size):
+        for pixel_y in range(tile_size):
+            for pixel_x in range(tile_size):
                 (cmr, cmg, cmb, cma) = municipality_tile[pixel_x, pixel_y]
                 (cbr, cbg, cbb, cba) = basemap_tile[pixel_x, pixel_y]
                 (cor, cog, cob, coa) = osm_tile[pixel_x, pixel_y]
@@ -102,9 +102,9 @@ def get_latest_timestamp(tile_indices, full_schemata, zoom):
 
 def main():
     if len(sys.argv) < 5 or len(sys.argv) > 8:
-        print "Usage: ./update-coverage.py <municipality-tiles-path> <basemap-tiles-path> <osm-tiles-path> " \
+        print("Usage: ./update-coverage.py <municipality-tiles-path> <basemap-tiles-path> <osm-tiles-path> " \
               "[<hostname>] <dbname> [<user>] [<password>] # Paths with trailing slashes please. The DB host, username " \
-              "and password are optional. If none is given, we'll try to connect without a password."
+              "and password are optional. If none is given, we'll try to connect without a password.")
         sys.exit(1)
 
     municipality_tiles_path = sys.argv[1]
@@ -116,7 +116,7 @@ def main():
 
     for path in [municipality_tiles_path, basemap_tiles_path, osm_tiles_path]:
         if not os.path.isdir(path):
-            print "Path %s does not exist. Please specify a valid path." % (path)
+            print("Path %s does not exist. Please specify a valid path." % (path))
 
     # Try to connect
     try:
@@ -132,7 +132,7 @@ def main():
                 password=sys.argv[8]
             )
     except Exception as e:
-        print "I am unable to connect to the database (%s)." % e.message
+        print("I am unable to connect to the database (%s)." % e.message)
         sys.exit(1)
 
     cur = conn.cursor()
@@ -142,11 +142,11 @@ def main():
                     "from austria_admin_boundaries "
                     "where admin_level=3")
     except Exception as e:
-        print "I can't SELECT! (%s)" % str(e)
+        print("I can't SELECT! (%s)" % str(e))
         sys.exit(1)
 
     rows = cur.fetchall()
-    print "%d municipalities found." % len(rows)
+    print("%d municipalities found." % len(rows))
 
     for municipality in rows:
         id = municipality[0]
@@ -173,7 +173,7 @@ def main():
             zoom)
 
         if len(coverage_rows) == 0 or coverage_rows[0][1] < latest_timestamp:
-            print "Municipality %s (ID %d) is out of date. Updating..." % (name, id)
+            print("Municipality %s (ID %d) is out of date. Updating..." % (name, id))
 
             (total_pixels_full, covered_basemap_pixels_full, uncovered_basemap_pixels_full) = \
                 calculate_coverage_full_tiles(basemap_tiles_path, osm_tiles_path, zoom, schema, tile_size, full_tiles)
@@ -202,8 +202,8 @@ def main():
                 )
                 conn.commit()
             else:
-                print "The latest timestamp of the tiles of municipality %s has changed but these changes did not " \
-                      "affect this municipality. Only updating the timestsamp of entry %d." % (name, coverage_rows[0][0])
+                print("The latest timestamp of the tiles of municipality %s has changed but these changes did not " \
+                      "affect this municipality. Only updating the timestsamp of entry %d." % (name, coverage_rows[0][0]))
                 statement = "update austria_building_coverage set timestamp = to_timestamp(%.0f) " \
                             "where id = %d" % (latest_timestamp, coverage_rows[0][0])
                 cur.execute(statement)

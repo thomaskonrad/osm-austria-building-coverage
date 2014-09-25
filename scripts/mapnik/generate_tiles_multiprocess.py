@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from math import pi,cos,sin,log,exp,atan
 from subprocess import call
 import sys, os
@@ -116,14 +116,14 @@ class RenderThread:
             if bytes == 103:
                 empty = " Empty Tile "
             self.printLock.acquire()
-            print name, ":", z, x, y, exists, empty
+            print(name, ":", z, x, y, exists, empty)
             self.printLock.release()
             self.q.task_done()
 
 
 
 def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", num_threads=NUM_THREADS):
-    print "render_tiles(",bbox, mapfile, tile_dir, minZoom,maxZoom, name,")"
+    print("render_tiles(",bbox, mapfile, tile_dir, minZoom,maxZoom, name,")")
 
     # Launch rendering threads
     queue = multiprocessing.JoinableQueue(32)
@@ -182,7 +182,7 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", 
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print "Usage: generate_tiles_multiprocess.py <mapfile> <tile_directory> <min_zoom> <max_zoom>"
+        print("Usage: generate_tiles_multiprocess.py <mapfile> <tile_directory> <min_zoom> <max_zoom>")
         sys.exit(1)
 
     home = os.environ['HOME']
