@@ -8,6 +8,9 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "osm_austria_building_coverage.settings")
 
 from django.core.wsgi import get_wsgi_application
