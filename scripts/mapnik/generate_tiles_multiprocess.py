@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 from math import pi,cos,sin,log,exp,atan
 from subprocess import call
 import sys, os
@@ -129,7 +129,7 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", 
     queue = multiprocessing.JoinableQueue(32)
     printLock = multiprocessing.Lock()
     renderers = {}
-    for i in range(num_threads):
+    for i in xrange(num_threads):
         renderer = RenderThread(tile_dir, mapfile, queue, printLock, maxZoom)
         render_thread = multiprocessing.Process(target=renderer.loop)
         render_thread.start()
@@ -171,11 +171,11 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", 
                 queue.put(t)
 
     # Signal render threads to exit by sending empty request to queue
-    for i in range(num_threads):
+    for i in xrange(num_threads):
         queue.put(None)
     # wait for pending rendering jobs to complete
     queue.join()
-    for i in range(num_threads):
+    for i in xrange(num_threads):
         renderers[i].join()
 
 
