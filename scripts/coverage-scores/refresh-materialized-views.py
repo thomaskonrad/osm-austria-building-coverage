@@ -23,7 +23,8 @@ def main():
     try:
         cur.execute("REFRESH MATERIALIZED VIEW coverage_score_base")
         cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary")
-
+        conn.commit()
+        
         print("Materialized views successfully updated.")
     except Exception as e:
         print("I can't SELECT! (%s)" % str(e))
