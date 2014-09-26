@@ -20,7 +20,7 @@ def deg2num(lat_deg, lon_deg, zoom=16):
 def hex2rgb(hex):
     # Remove the hash in the beginning
     hex = hex[1:]
-    return struct.unpack("BBB", hex.decode("hex"))
+    return struct.unpack('BBB', bytes.fromhex(hex))
 
 
 def main():

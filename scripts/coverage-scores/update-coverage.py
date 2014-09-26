@@ -11,7 +11,7 @@ import math
 def hex2rgb(hex):
     # Remove the hash in the beginning
     hex = hex[1:]
-    return struct.unpack("BBB", hex.decode("hex"))
+    return struct.unpack('BBB', bytes.fromhex(hex))
 
 
 def calculate_coverage_full_tiles(basemap_tiles_path, osm_tiles_path, zoom, schema, tile_size, tile_indices):
