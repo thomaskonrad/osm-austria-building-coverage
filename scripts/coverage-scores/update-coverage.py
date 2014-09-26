@@ -2,7 +2,7 @@
 
 import psycopg2
 import sys
-import Image
+from PIL import Image
 import os
 import struct
 import math

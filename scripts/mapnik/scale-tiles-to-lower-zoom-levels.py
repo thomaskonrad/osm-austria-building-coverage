@@ -1,8 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import sys
 import os
-import Image
+from PIL import Image
 
 
 def get_transparent_image(width=256, height=256):
