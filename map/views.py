@@ -20,10 +20,13 @@ def map(request):
         )
         a = 1
 
+    root_boundary = CoverageBoundary.objects.get(pk=0)
+
     context = {
         'disable_scroll_whell_zoom': request.GET.get('disable_scroll_whell_zoom', False),
         'polygon': polygon,
-        'bbox': bbox
+        'bbox': bbox,
+        'oldest_timestamp': root_boundary.oldest_timestamp
     }
 
     return render(request, 'map.html', context)

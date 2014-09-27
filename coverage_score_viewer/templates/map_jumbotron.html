@@ -6,7 +6,7 @@
             <span class="coverage-gain {% if coverage_boundary.total_coverage_gain >= 0 %}positive{% endif %}">
                 compared to <a href="http://www.basemap.at">basemap.at</a>. That's a gain of
                 {{ coverage_boundary.total_coverage_gain|floatformat:+2 }} %
-                since the beginning of this service.
+                since {{ coverage_boundary.oldest_timestamp|date:"F d, Y" }}.
             </span>
         </div>
     </div>
