@@ -116,7 +116,7 @@
 .select2-chosen,
 .select2-choice > span:first-child,
 .select2-container .select2-choices .select2-search-field input {
-  padding: 6px 12px;
+  padding: 5px 12px;
 }
 
 .input-sm .select2-chosen,
