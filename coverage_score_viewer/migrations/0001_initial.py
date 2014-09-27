@@ -13,11 +13,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CoverageBoundary',
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ('id', models.IntegerField(serialize=False, primary_key=True)),
                 ('admin_level', models.IntegerField()),
                 ('name', models.TextField()),
                 ('rank', models.IntegerField()),
                 ('latest_timestamp', models.DateTimeField()),
+                ('oldest_timestamp', models.DateTimeField()),
                 ('coverage', models.FloatField()),
                 ('original_coverage', models.FloatField()),
                 ('total_coverage_gain', models.FloatField()),

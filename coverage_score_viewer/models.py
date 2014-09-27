@@ -8,6 +8,7 @@ class CoverageBoundary(models.Model):
     rank = models.IntegerField()
     parent = models.ForeignKey("CoverageBoundary")
     latest_timestamp = models.DateTimeField()
+    oldest_timestamp = models.DateTimeField()
     coverage = models.FloatField()
     original_coverage = models.FloatField()
     total_coverage_gain = models.FloatField()

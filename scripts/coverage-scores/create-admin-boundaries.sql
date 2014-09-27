@@ -239,6 +239,7 @@ group by id;
 create materialized view coverage_score_base as
 select b.gkz::int as gkz, b.name as name, p.gkz::int as district_id,
   max(c_current.timestamp) as latest_timestamp,
+  min(c_current.timestamp) as oldest_timestamp,
   sum(c_current.total_pixels) as total_pixels,
   sum(c_current.covered_basemap_pixels) as covered_basemap_pixels,
   sum(c_current.uncovered_basemap_pixels) as uncovered_basemap_pixels,
@@ -266,6 +267,7 @@ select csb.gkz as id, 3::int as admin_level, csb.name,
   rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
   csb.district_id as parent_id,
   csb.latest_timestamp,
+  csb.oldest_timestamp,
   sum(csb.total_pixels) as total_pixels,
   sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
   sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
@@ -280,7 +282,7 @@ select csb.gkz as id, 3::int as admin_level, csb.name,
 from coverage_score_base csb,
   simplified_polygon s
 where csb.gkz = s.id and s.admin_level = 3
-group by csb.gkz, csb.name, csb.district_id, csb.latest_timestamp, s.polygon, s.bbox
+group by csb.gkz, csb.name, csb.district_id, csb.latest_timestamp, csb.oldest_timestamp, s.polygon, s.bbox
 
 
 union all
@@ -290,6 +292,7 @@ select b.gkz::int as id, 2::int as admin_level, b.name as name,
   rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
   p.gkz::int as parent_id,
   max(csb.latest_timestamp) as latest_timestamp,
+  min(csb.oldest_timestamp) as oldest_timestamp,
   sum(csb.total_pixels) as total_pixels,
   sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
   sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
@@ -316,6 +319,7 @@ select state.gkz::int as id, 1::int as admin_level, state.name,
   rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
   0::int as parent_id,
   max(csb.latest_timestamp) as latest_timestamp,
+  min(csb.oldest_timestamp) as oldest_timestamp,
   sum(csb.total_pixels) as total_pixels,
   sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
   sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
@@ -340,6 +344,7 @@ union all
 -- Countries
 select 0 as id, 0::int as admin_level, 'Österreich'::text as name, 1::int as rank, null as parent_id,
   max(csb.latest_timestamp) as latest_timestamp,
+  min(csb.oldest_timestamp) as oldest_timestamp,
   sum(csb.total_pixels) as total_pixels,
   sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
   sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
