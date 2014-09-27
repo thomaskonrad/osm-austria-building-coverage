@@ -9,13 +9,21 @@
             <tr>
                 <th>Rank</th>
                 <th>Name</th>
+                <th>Is in</th>
                 <th>Coverage</th>
                 <th>Gain</th>
             </tr>
             {% for boundary in boundaries %}
                 <tr>
                     <td>{{ boundary.rank }}.</td>
-                    <td><a href="{% url "coverage_score_viewer.views.details" boundary.id %}">{{ boundary }}</a></td>
+                    <td>
+                        <a href="{% url "coverage_score_viewer.views.details" boundary.id %}">{{ boundary }}</a>
+                    </td>
+                    <td>
+                        {% if boundary.parent %}
+                            <a href="{% url "coverage_score_viewer.views.details" boundary.parent.id %}">{{ boundary.parent }}</a>
+                        {% endif %}
+                    </td>
                     <td>{{ boundary.coverage|floatformat:2 }} %</td>
                     <td>{{ boundary.total_coverage_gain|floatformat:2 }} %</td>
                 </tr>
