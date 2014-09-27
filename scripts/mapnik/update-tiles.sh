@@ -27,6 +27,9 @@ if [ $? -eq 0 ]; then
     rsync -vrc --stats ${tiles_dir}/${zoom_level}/ ${tiles_root_dir}${tiles_dir_base_name}-current/${zoom_level}/
     echo "$(current_time) Done!"
 
+    # We remove the temporary tiles directory
+    rm -r ${tiles_dir}
+
 	echo "$(current_time) Scaling tiles to lower zoom levels..."
 	${DIR}scale-tiles-to-lower-zoom-levels.py ${tiles_root_dir}${tiles_dir_base_name}-current/ ${zoom_level}
 
