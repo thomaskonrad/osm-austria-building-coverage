@@ -12,7 +12,7 @@
                 <tr>
                     <td>{{ coverage_boundary.rank }}.</td>
                     <td><a href="{% url "coverage_score_viewer.views.details" coverage_boundary.id %}">{{ coverage_boundary }}</a></td>
-                    <td>{{ coverage_boundary.coverage|floatformat:2 }} %</td>
+                    <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
                 </tr>
             {% endfor %}
 
@@ -20,7 +20,7 @@
                 <tr>
                     <td></td>
                     <td><strong>{{ parent_boundary }} (Total)</strong></td>
-                    <td><strong>{{ parent_boundary.coverage|floatformat:2 }} %</strong></td>
+                    <td><strong>{% include "coverage_formatted.html" with coverage=parent_boundary.coverage %}</strong></td>
                 </tr>
             {% endif %}
         </table>

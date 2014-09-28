@@ -1,0 +1,9 @@
+{% if coverage > 85.0 %}
+    > 85 %
+    {% if not hide_info %}
+        <i class="glyphicon glyphicon-info-sign tooltip-i" data-toggle="tooltip" data-placement="right"
+           title="Everything above 85 % is considered practically complete."></i>
+    {% endif %}
+{% else %}
+    ~{{ coverage|floatformat:0 }} %
+{% endif %}

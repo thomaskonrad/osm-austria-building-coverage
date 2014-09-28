@@ -12,7 +12,7 @@
         {% endif %}
     </h1>
 
-    <p>{{ coverage_boundary.coverage|floatformat:2 }} % of all buildings on
+    <p>~{{ coverage_boundary.coverage|floatformat:0 }} % of all buildings on
         <a href="http://www.basemap.at">basemap.at</a> in the {{ coverage_boundary.admin_level_string }} of
         {{ coverage_boundary }} are covered by a building on <a href="http://www.openstreetmap.org">OpenStreetMap</a>
         in the same area. The table below shows some details.</p>
@@ -21,15 +21,15 @@
         <tbody>
             <tr>
                 <th>Total coverage</th>
-                <td>{{ coverage_boundary.coverage|floatformat:2 }} %</td>
+                <td>~{{ coverage_boundary.coverage|floatformat:0 }} %</td>
             </tr>
             <tr>
                 <th>Original coverage</th>
-                <td>{{ coverage_boundary.original_coverage|floatformat:2 }} %</td>
+                <td>~{{ coverage_boundary.original_coverage|floatformat:0 }} %</td>
             </tr>
             <tr>
                 <th>Difference since the start</th>
-                <td>{{ coverage_boundary.total_coverage_gain|floatformat:2 }} %</td>
+                <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
             </tr>
             <tr>
                 <th>Latest changes</th>
@@ -52,8 +52,8 @@
                 <tr>
                     <td>{{ child.rank }}.</td>
                     <td><a href="{% url "coverage_score_viewer.views.details" child.id %}">{{ child }}</a></td>
-                    <td>{{ child.coverage|floatformat:2 }} %</td>
-                    <td>{{ child.total_coverage_gain|floatformat:2 }} %</td>
+                    <td>~{{ child.coverage|floatformat:0 }} %</td>
+                    <td>~{{ child.total_coverage_gain|floatformat:0 }} %</td>
                 </tr>
             {% endfor %}
         </table>
