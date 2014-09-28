@@ -13,11 +13,16 @@ def index(request):
     top_10_districts = CoverageBoundary.objects.filter(admin_level=2).order_by('rank')[:10]
     top_10_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('rank')[:10]
 
+    least_covered_districts = CoverageBoundary.objects.filter(admin_level=2).order_by('-rank')[:50]
+    least_covered_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('-rank')[:50]
+
     context = {
         'country': country,
         'states': states,
         'top_10_districts': top_10_districts,
-        'top_10_municipalities': top_10_municipalities
+        'top_10_municipalities': top_10_municipalities,
+        'least_covered_districts': least_covered_districts,
+        'least_covered_municipalities': least_covered_municipalities,
     }
 
     return render(request, 'index.html', context)

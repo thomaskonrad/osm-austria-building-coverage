@@ -1,0 +1,37 @@
+{% with "coverage_score_viewer.views."|add:name as route_show_all %}
+
+{% if coverage_boundaries %}
+    <p>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Coverage</th>
+            </tr>
+            {% for coverage_boundary in coverage_boundaries %}
+                <tr>
+                    <td>{{ coverage_boundary.rank }}.</td>
+                    <td><a href="{% url "coverage_score_viewer.views.details" coverage_boundary.id %}">{{ coverage_boundary }}</a></td>
+                    <td>{{ coverage_boundary.coverage|floatformat:2 }} %</td>
+                </tr>
+            {% endfor %}
+
+            {% if parent_boundary %}
+                <tr>
+                    <td></td>
+                    <td><strong>{{ parent_boundary }} (Total)</strong></td>
+                    <td><strong>{{ parent_boundary.coverage|floatformat:2 }} %</strong></td>
+                </tr>
+            {% endif %}
+        </table>
+    </p>
+    <p>
+        <a class="btn btn-default" href="{% url route_show_all %}">
+            See all {{ name }} <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </p>
+{% else %}
+    <p>No {{ name }} found.</p>
+{% endif %}
+
+{% endwith %}

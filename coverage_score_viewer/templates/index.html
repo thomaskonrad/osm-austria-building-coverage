@@ -40,101 +40,40 @@
                 </ul>
             </div>
         </div>
-
-
     </div>
+
     <div class="row">
+        <div class="col-lg-12">
+            <h1>The Least Covered Regions in Austria</h1>
+            <p>These are the regions that have the most catching-up to do.</p>
+        </div>
+        <div class="col-md-6">
+            <h2>Least Covered Districts</h2>
+            {% include 'table_small.html' with coverage_boundaries=least_covered_districts name='districts' %}
+        </div>
+        <div class="col-md-6">
+            <h2>Least Covered Municipalities</h2>
+            {% include 'table_small.html' with coverage_boundaries=least_covered_municipalities name='municipalities' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Top Regions in Austria</h1>
+            <p>These districts and municipalities and Austria have the best coverage compared to
+               <a href="http://www.basemap.at">basemap.at</a>.</p>
+        </div>
         <div class="col-md-4">
             <h2>States</h2>
-            {% if states %}
-                <p>
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Coverage</th>
-                        </tr>
-                        {% for state in states %}
-                            <tr>
-                                <td>{{ state.rank }}.</td>
-                                <td><a href="{% url "coverage_score_viewer.views.details" state.id %}">{{ state }}</a></td>
-                                <td>{{ state.coverage|floatformat:2 }} %</td>
-                            </tr>
-                        {% endfor %}
-
-                        {% if country %}
-                            <tr>
-                                <td></td>
-                                <td><strong>{{ country }} (Total)</strong></td>
-                                <td><strong>{{ country.coverage|floatformat:2 }} %</strong></td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                </p>
-                <p>
-                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.states' %}">
-                        See all states <span class="glyphicon glyphicon-chevron-right"></span>
-                    </a>
-                </p>
-            {% else %}
-                <p>No states could be found.</p>
-            {% endif %}
+            {% include 'table_small.html' with coverage_boundaries=states parent_boundary=country name='states' %}
         </div>
         <div class="col-md-4">
             <h2>Top 10 Districts</h2>
-            {% if top_10_districts %}
-                <p>
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Coverage</th>
-                        </tr>
-                        {% for district in top_10_districts %}
-                            <tr>
-                                <td>{{ district.rank }}.</td>
-                                <td><a href="{% url 'coverage_score_viewer.views.details' district.id %}">{{ district }}</a></td>
-                                <td>{{ district.coverage|floatformat:2 }} %</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </p>
-                <p>
-                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.districts' %}">
-                        See all districts <span class="glyphicon glyphicon-chevron-right"></span>
-                    </a>
-                </p>
-            {% else %}
-                <p>No districts could be found.</p>
-            {% endif %}
+            {% include 'table_small.html' with coverage_boundaries=top_10_districts name='districts' %}
         </div>
         <div class="col-md-4">
             <h2>Top 10 Municipalities</h2>
-            {% if top_10_municipalities %}
-                <p>
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Coverage</th>
-                        </tr>
-                        {% for municipality in top_10_municipalities %}
-                            <tr>
-                                <td>{{ municipality.rank }}.</td>
-                                <td><a href="{% url 'coverage_score_viewer.views.details' municipality.id %}">{{ municipality }}</a></td>
-                                <td>{{ municipality.coverage|floatformat:2 }} %</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </p>
-                <p>
-                    <a class="btn btn-default" href="{% url 'coverage_score_viewer.views.municipalities' %}">
-                        See all municipalities <span class="glyphicon glyphicon-chevron-right"></span>
-                    </a>
-                </p>
-            {% else %}
-                <p>No municipalities could be found.</p>
-            {% endif %}
+            {% include 'table_small.html' with coverage_boundaries=top_10_municipalities name='municipalities' %}
         </div>
     </div>
 {% endblock %}
