@@ -239,7 +239,7 @@ group by id;
 create materialized view coverage_score_base as
 select b.gkz::int as gkz, b.name as name, p.gkz::int as district_id,
   max(c_current.timestamp) as latest_timestamp,
-  min(c_current.timestamp) as oldest_timestamp,
+  min(c_original.timestamp) as oldest_timestamp,
   sum(c_current.total_pixels) as total_pixels,
   sum(c_current.covered_basemap_pixels) as covered_basemap_pixels,
   sum(c_current.uncovered_basemap_pixels) as uncovered_basemap_pixels,
