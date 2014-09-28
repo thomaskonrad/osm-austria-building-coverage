@@ -52,7 +52,7 @@
                 <tr>
                     <td>{{ child.rank }}.</td>
                     <td><a href="{% url "coverage_score_viewer.views.details" child.id %}">{{ child }}</a></td>
-                    <td>~{{ child.coverage|floatformat:0 }} %</td>
+                    <td>{% include "coverage_formatted.html" with coverage=child.coverage %}</td>
                     <td>~{{ child.total_coverage_gain|floatformat:0 }} %</td>
                 </tr>
             {% endfor %}
