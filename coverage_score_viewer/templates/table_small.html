@@ -6,13 +6,21 @@
             <tr>
                 <th>Rank</th>
                 <th>Name</th>
+                <th>Latest Changes</th>
                 <th>Coverage</th>
+                {% if with_gain %}
+                    <th>Difference</th>
+                {% endif %}
             </tr>
             {% for coverage_boundary in coverage_boundaries %}
                 <tr>
                     <td>{{ coverage_boundary.rank }}.</td>
                     <td><a href="{% url "coverage_score_viewer.views.details" coverage_boundary.id %}">{{ coverage_boundary }}</a></td>
+                    <td>{{ coverage_boundary.latest_timestamp|date:"Y-m-d" }}</td>
                     <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
+                    {% if with_gain %}
+                        <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
 

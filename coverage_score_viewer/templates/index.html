@@ -63,17 +63,24 @@
             <p>These districts and municipalities and Austria have the best coverage compared to
                <a href="http://www.basemap.at">basemap.at</a>.</p>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2>States</h2>
             {% include 'table_small.html' with coverage_boundaries=states parent_boundary=country name='states' %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2>Top 10 Districts</h2>
             {% include 'table_small.html' with coverage_boundaries=top_10_districts name='districts' %}
         </div>
-        <div class="col-md-4">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
             <h2>Top 10 Municipalities</h2>
             {% include 'table_small.html' with coverage_boundaries=top_10_municipalities name='municipalities' %}
+        </div>
+        <div class="col-md-6">
+            <h2>Top 10 Ascending Municipalities</h2>
+            {% include 'table_small.html' with coverage_boundaries=top_10_ascending_municipalities name='municipalities' with_gain=True %}
         </div>
     </div>
 {% endblock %}
