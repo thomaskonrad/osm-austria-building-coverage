@@ -27,15 +27,15 @@
     <table class="table table-bordered table-nonfluid table-headings-left">
         <tbody>
             <tr>
-                <th>{% trans 'Total coverage' %}</th>
-                <td>~{{ coverage_boundary.coverage|floatformat:0 }} %</td>
+                <th>{% trans 'Total Coverage' %}</th>
+                <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
             </tr>
             <tr>
-                <th>{% trans 'Original coverage' %}</th>
-                <td>~{{ coverage_boundary.original_coverage|floatformat:0 }} %</td>
+                <th>{% trans 'Original Coverage' %}</th>
+                <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.original_coverage %}</td>
             </tr>
             <tr>
-                <th>{% trans 'Difference since the start' %}</th>
+                <th>{% trans 'Difference since the Start' %}</th>
                 <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
             </tr>
             <tr>

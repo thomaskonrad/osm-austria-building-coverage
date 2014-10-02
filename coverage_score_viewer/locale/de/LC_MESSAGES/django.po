@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-02 08:37+0200\n"
+"POT-Creation-Date: 2014-10-02 18:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,30 +85,33 @@ msgstr ""
 "        "
 
 #: templates/details.html:30
-msgid "Total coverage"
+msgid "Total Coverage"
 msgstr "Gesamtabdeckung"
 
 #: templates/details.html:34
-msgid "Original coverage"
+msgid "Original Coverage"
 msgstr "Ursprüngliche Abdeckung"
 
-#: templates/details.html:38
-msgid "Difference since the start"
+#: templates/details.html:38 templates/list.html:18
+msgid "Difference since the Start"
 msgstr "Differenz seit dem Anfang"
 
-#: templates/details.html:42 templates/table_small.html:11
+#: templates/details.html:42 templates/list.html:15
+#: templates/table_small.html:11
 msgid "Latest Changes"
-msgstr "Letzte Änderungen"
+msgstr "Letzte Änderung"
 
 #: templates/details.html:53
 msgid "Overall Rank"
 msgstr "Gesamtrang"
 
-#: templates/details.html:54 templates/table_small.html:10
+#: templates/details.html:54 templates/list.html:14
+#: templates/table_small.html:10
 msgid "Name"
 msgstr "Name"
 
-#: templates/details.html:55 templates/table_small.html:12
+#: templates/details.html:55 templates/list.html:17
+#: templates/table_small.html:12
 msgid "Coverage"
 msgstr "Abdeckung"
 
@@ -229,6 +232,14 @@ msgstr "Gemeinden Top 10"
 msgid "Top 10 Ascending Municipalities"
 msgstr "Aufsteigende Gemeinden Top 10"
 
+#: templates/list.html:13 templates/table_small.html:9
+msgid "Rank"
+msgstr "Rang"
+
+#: templates/list.html:16
+msgid "Is In"
+msgstr "Ist in"
+
 #: templates/map_jumbotron.html:8
 #, python-format
 msgid "%(coverage_boundary)s has a total building coverage of"
@@ -243,11 +254,7 @@ msgstr ""
 "im Vergleich zu <a href=\"http://www.basemap.at\">basemap.at</a>. Das ist "
 "eine Differenz von ~%(total_coverage_gain)s %% seit %(oldest_timestamp)s."
 
-#: templates/table_small.html:9
-msgid "Rank"
-msgstr "Rang"
-
-#: templates/table_small.html:42
+#: templates/table_small.html:43
 #, python-format
 msgid "See all %(admin_level_name)s"
 msgstr "Alle %(admin_level_name)s sehen"

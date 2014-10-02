@@ -1,5 +1,8 @@
 {% extends "base.html" %}
+
 {% load humanize %}
+{% load l10n %}
+{% load i18n %}
 
 {% block content %}
     <h1>{{ admin_level_heading }}</h1>
@@ -7,11 +10,12 @@
     <p>
         <table class="table table-bordered table-striped">
             <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Is in</th>
-                <th>Coverage</th>
-                <th>Difference since the start</th>
+                <th>{% trans 'Rank' %}</th>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Latest Changes' %}</th>
+                <th>{% trans 'Is In' %}</th>
+                <th>{% trans 'Coverage' %}</th>
+                <th>{% trans 'Difference since the Start' %}</th>
             </tr>
             {% for boundary in boundaries %}
                 <tr>
@@ -19,6 +23,7 @@
                     <td>
                         <a href="{% url "coverage_score_viewer.views.details" boundary.id %}">{{ boundary }}</a>
                     </td>
+                    <td>{{ boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
                     <td>
                         {% if boundary.parent %}
                             <a href="{% url "coverage_score_viewer.views.details" boundary.parent.id %}">{{ boundary.parent }}</a>
