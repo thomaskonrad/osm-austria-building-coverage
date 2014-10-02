@@ -10,5 +10,7 @@ urlpatterns = patterns('',
     url(r'^details/(?P<boundary_id>\d+)$', 'coverage_score_viewer.views.details', name='details'),
     url(r'^search$', 'coverage_score_viewer.views.search', name='search'),
 
+    url(r'^coverage-chart.svg', 'coverage_score_viewer.views.coverage_chart', name='coverage_chart'),
+
     url(r'^map/$', 'map.views.map', name='map'),
 )

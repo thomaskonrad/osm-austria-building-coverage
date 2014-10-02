@@ -21,7 +21,7 @@ def main():
     cur = conn.cursor()
 
     try:
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_score_base")
+        cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary_base")
         cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary")
         conn.commit()
         

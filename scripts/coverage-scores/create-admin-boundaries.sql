@@ -187,7 +187,7 @@ ON austria_building_coverage (timestamp);
 
 -- Drop views first
 drop materialized view if exists coverage_boundary;
-drop materialized view if exists coverage_score_base;
+drop materialized view if exists coverage_boundary_base;
 
 drop table if exists simplified_polygon;
 
@@ -236,7 +236,7 @@ where p.admin_level = '2' and p.name='Österreich'
 group by id;
 
 -- Base view
-create materialized view coverage_score_base as
+create materialized view coverage_boundary_base as
 select b.gkz::int as gkz, b.name as name, p.gkz::int as district_id,
   max(c_current.timestamp) as latest_timestamp,
   min(c_original.timestamp) as oldest_timestamp,
@@ -279,7 +279,7 @@ select csb.gkz as id, 3::int as admin_level, csb.name,
     (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
   ) as total_coverage_gain,
   s.polygon, s.bbox
-from coverage_score_base csb,
+from coverage_boundary_base csb,
   simplified_polygon s
 where csb.gkz = s.id and s.admin_level = 3
 group by csb.gkz, csb.name, csb.district_id, csb.latest_timestamp, csb.oldest_timestamp, s.polygon, s.bbox
@@ -307,7 +307,7 @@ select b.gkz::int as id, 2::int as admin_level, b.name as name,
 from simplified_polygon s,
   austria_admin_boundaries b
   left join austria_admin_boundaries p on (b.parent = p.id)
-  left join coverage_score_base csb on (csb.district_id = b.gkz::int)
+  left join coverage_boundary_base csb on (csb.district_id = b.gkz::int)
 where b.admin_level = 2
   and b.gkz::int = s.id and s.admin_level = 2
 group by b.gkz::int, b.name, p.gkz, s.polygon, s.bbox
@@ -334,7 +334,7 @@ select state.gkz::int as id, 1::int as admin_level, state.name,
 from simplified_polygon s,
   austria_admin_boundaries state
   left join austria_admin_boundaries district on (district.parent = state.id)
-  left join coverage_score_base csb on (csb.district_id = district.gkz::int)
+  left join coverage_boundary_base csb on (csb.district_id = district.gkz::int)
 where state.admin_level = 1
   and state.gkz::int = s.id and s.admin_level = 1
 group by state.gkz, state.name, s.polygon, s.bbox
@@ -357,6 +357,32 @@ select 0 as id, 0::int as admin_level, 'Österreich'::text as name, 1::int as ra
   ) as total_coverage_gain,
   s.polygon, s.bbox
 from simplified_polygon s,
-  coverage_score_base csb
+  coverage_boundary_base csb
 where s.id = 0 and s.admin_level = 0
 group by s.polygon, s.bbox;
+
+
+-- Materialized view with all coverage score entries
+drop materialized view if exists coverage_score;
+drop materialized view if exists coverage_score_base;
+
+create materialized view coverage_score_base as
+select b.gkz::int as id, p.gkz::int as district_id,
+  c_current.timestamp::date as date,
+  sum(c_current.total_pixels) as total_pixels,
+  sum(c_current.covered_basemap_pixels) as covered_basemap_pixels,
+  sum(c_current.uncovered_basemap_pixels) as uncovered_basemap_pixels
+from austria_building_coverage c_current
+left join austria_admin_boundaries b on (c_current.municipality_id = b.id)
+left join austria_admin_boundaries p on (b.parent = p.id)
+where c_current.municipality_id = b.id
+group by b.gkz, p.gkz::int, c_current.timestamp::date;
+
+-- Coverage score view
+create materialized view coverage_score as
+
+-- Municipalities
+
+select id, date,
+  (covered_basemap_pixels::float / (covered_basemap_pixels + uncovered_basemap_pixels) * 100.0) as coverage
+from coverage_score_base;
