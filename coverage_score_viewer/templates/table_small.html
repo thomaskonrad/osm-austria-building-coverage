@@ -1,45 +1,52 @@
-{% with "coverage_score_viewer.views."|add:name as route_show_all %}
+{% load i18n %}
+{% load l10n %}
 
-{% if coverage_boundaries %}
-    <p>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Latest Changes</th>
-                <th>Coverage</th>
-                {% if with_gain %}
-                    <th>Difference</th>
-                {% endif %}
-            </tr>
-            {% for coverage_boundary in coverage_boundaries %}
+{% with "coverage_score_viewer.views."|add:name as route_show_all %}
+    {% if coverage_boundaries %}
+        <p>
+            <table class="table table-bordered table-striped">
                 <tr>
-                    <td>{{ coverage_boundary.rank }}.</td>
-                    <td><a href="{% url "coverage_score_viewer.views.details" coverage_boundary.id %}">{{ coverage_boundary }}</a></td>
-                    <td>{{ coverage_boundary.latest_timestamp|date:"Y-m-d" }}</td>
-                    <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
+                    <th>{% trans 'Rank' %}</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Latest Changes' %}</th>
+                    <th>{% trans 'Coverage' %}</th>
                     {% if with_gain %}
-                        <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
+                        <th>{% trans 'Difference' %}</th>
                     {% endif %}
                 </tr>
-            {% endfor %}
+                {% for coverage_boundary in coverage_boundaries %}
+                    <tr>
+                        <td>{{ coverage_boundary.rank }}.</td>
+                        <td><a href="{% url "coverage_score_viewer.views.details" coverage_boundary.id %}">{{ coverage_boundary }}</a></td>
+                        <td>{{ coverage_boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
+                        <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
+                        {% if with_gain %}
+                            <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
 
-            {% if parent_boundary %}
-                <tr>
-                    <td></td>
-                    <td><strong>{{ parent_boundary }} (Total)</strong></td>
-                    <td><strong>{% include "coverage_formatted.html" with coverage=parent_boundary.coverage %}</strong></td>
-                </tr>
-            {% endif %}
-        </table>
-    </p>
-    <p>
-        <a class="btn btn-default" href="{% url route_show_all %}">
-            See all {{ name }} <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-    </p>
-{% else %}
-    <p>No {{ name }} found.</p>
-{% endif %}
-
+                {% if parent_boundary %}
+                    <tr>
+                        <td></td>
+                        <td><strong>{{ parent_boundary }} (Total)</strong></td>
+                        <td>{{ parent_boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
+                        <td><strong>{% include "coverage_formatted.html" with coverage=parent_boundary.coverage %}</strong></td>
+                    </tr>
+                {% endif %}
+            </table>
+        </p>
+        {% if coverage_boundaries|length > 0 %}
+            {% with coverage_boundaries.0.admin_level_string_plural as admin_level_name %}
+                <p>
+                    <a class="btn btn-default" href="{% url route_show_all %}">
+                        {% blocktrans %}See all {{ admin_level_name }}{% endblocktrans %}
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </p>
+            {% endwith %}
+        {% endif %}
+    {% else %}
+        <p>No {{ name }} found.</p>
+    {% endif %}
 {% endwith %}

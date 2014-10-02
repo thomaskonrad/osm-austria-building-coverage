@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html class="no-js">
     <head>
@@ -37,11 +39,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">OpenStreetMap Austria Building Coverage</a>
+                <a class="navbar-brand" href="/">{% trans "OpenStreetMap Austria Building Coverage" %}</a>
             </div>
             <div class="navbar-right">
                 <form class="navbar-form navbar-left" role="search">
-                    <input id="search-box" type="text" placeholder="Search State, District or Municipality" style="width: 320px;">
+                    <input id="search-box" type="text" placeholder="{% trans 'Search State, District or Municipality' %}" style="width: 410px;">
                     <script>
                         $(document).ready(function() {
                             $("#search-box").select2({

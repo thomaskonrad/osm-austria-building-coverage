@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 
+{% load l10n %}
+{% load i18n %}
+
 {% block jumbotron %}
     {% include 'map_jumbotron.html' with coverage_boundary=coverage_boundary %}
 {% endblock %}
 
 {% block content %}
     <h1>
-        {{ coverage_boundary }}
+        {% blocktrans with admin_level_string=coverage_boundary.admin_level_string name=coverage_boundary %}{{ admin_level_string }} of {{ name }}{% endblocktrans %}
         {% if coverage_boundary.parent %}
             (<a href="{% url "coverage_score_viewer.views.details" coverage_boundary.parent.id %}">{{ coverage_boundary.parent }}</a>)
         {% endif %}
     </h1>
 
-    <p>~{{ coverage_boundary.coverage|floatformat:0 }} % of all buildings on
-        <a href="http://www.basemap.at">basemap.at</a> in the {{ coverage_boundary.admin_level_string }} of
-        {{ coverage_boundary }} are covered by a building on <a href="http://www.openstreetmap.org">OpenStreetMap</a>
-        in the same area. The table below shows some details.</p>
+    <p>
+        {% blocktrans with coverage=coverage_boundary.coverage|floatformat:0 %}
+            ~{{ coverage }} % of all buildings on <a href="http://www.basemap.at">basemap.at</a> in
+            {{ coverage_boundary }} are covered by a building on
+            <a href="http://www.openstreetmap.org">OpenStreetMap</a> in the same area. The table below shows some
+            details.
+        {% endblocktrans %}
+    </p>
 
     <table class="table table-bordered table-nonfluid table-headings-left">
         <tbody>
             <tr>
-                <th>Total coverage</th>
+                <th>{% trans 'Total coverage' %}</th>
                 <td>~{{ coverage_boundary.coverage|floatformat:0 }} %</td>
             </tr>
             <tr>
-                <th>Original coverage</th>
+                <th>{% trans 'Original coverage' %}</th>
                 <td>~{{ coverage_boundary.original_coverage|floatformat:0 }} %</td>
             </tr>
             <tr>
-                <th>Difference since the start</th>
+                <th>{% trans 'Difference since the start' %}</th>
                 <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
             </tr>
             <tr>
-                <th>Latest changes</th>
-                <td>{{ coverage_boundary.latest_timestamp|date:"F d, Y" }}</td>
+                <th>{% trans 'Latest Changes' %}</th>
+                <td>{{ coverage_boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
             </tr>
         </tbody>
     </table>
@@ -43,10 +50,10 @@
 
         <table class="table table-bordered table-striped table-nonfluid">
             <tr>
-                <th>Overall Rank</th>
-                <th>Name</th>
-                <th>Coverage</th>
-                <th>Gain</th>
+                <th>{% trans 'Overall Rank' %}</th>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Coverage' %}</th>
+                <th>{% trans 'Difference' %}</th>
             </tr>
             {% for child in children %}
                 <tr>

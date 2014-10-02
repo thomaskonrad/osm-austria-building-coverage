@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import ugettext as _
 
 
 class CoverageBoundary(models.Model):
@@ -18,23 +19,23 @@ class CoverageBoundary(models.Model):
     admin_levels = {
         0: {
             'singular_lower': 'country',
-            'singular_upper': 'Country',
-            'plural_upper': 'Countries'
+            'singular_upper': _('Country'),
+            'plural_upper': _('Countries')
         },
         1: {
             'singular_lower': 'state',
-            'singular_upper': 'State',
-            'plural_upper': 'States'
+            'singular_upper': _('State'),
+            'plural_upper': _('States')
         },
         2: {
             'singular_lower': 'district',
-            'singular_upper': 'District',
-            'plural_upper': 'Districts'
+            'singular_upper': _('District'),
+            'plural_upper': _('Districts')
         },
         3: {
             'singular_lower': 'municipality',
-            'singular_upper': 'Municipality',
-            'plural_upper': 'Municipalities'
+            'singular_upper': _('Municipality'),
+            'plural_upper': _('Municipalities')
         },
     }
 
@@ -50,6 +51,9 @@ class CoverageBoundary(models.Model):
 
     def admin_level_string(self, format='singular_upper'):
         return CoverageBoundary.admin_levels[self.admin_level][format]
+
+    def admin_level_string_plural(self):
+        return CoverageBoundary.admin_levels[self.admin_level]['plural_upper']
 
     def children_admin_level_string(self, format='plural_upper'):
         return CoverageBoundary.admin_levels[self.admin_level + 1][format]

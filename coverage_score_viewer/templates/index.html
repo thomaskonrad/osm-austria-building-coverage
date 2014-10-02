@@ -1,41 +1,40 @@
 {% extends "base.html" %}
+
 {% load humanize %}
+{% load i18n %}
+{% load l10n %}
 
 {% block jumbotron %}
-
     {% include 'map_jumbotron.html' with coverage_boundary=country %}
 {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            <h1>The OpenStreetMap Austria Building Coverage in Numbers</h1>
+            <h1>{% trans "The OpenStreetMap Austria Building Coverage in Numbers" %}</h1>
 
-            <p>Welcome! This site aims to give an overview of how high the building coverage in Austria on
-            OpenStreetMap is compared to <a href="http://www.basemap.at">basemap.at</a>. But before you start digging
-            into the numbers, let me note a few things:</p>
+            <p>
+                {% trans 'Welcome! This site aims to give an overview of how high the building coverage in Austria on OpenStreetMap is compared to <a href="http://www.basemap.at">basemap.at</a>. But before you start digging into the numbers, let me note a few things:' %}</p>
 
             <div class="alert alert-warning" role="alert">
                 <ul>
-                    <li>This is not a public request to uncritically copy from other maps, even though they allow you to do
-                        so.
+                    <li>
+                        {% trans 'This is not a public request to uncritically copy from other maps, even though they allow you to do so.' %}
                     </li>
-                    <li>This site <me>only</me> aims to serve as an approximation to show which regions in Austria have the
-                        most catching-up to do in terms of building (and therefore probably address) coverage.
+                    <li>
+                        {% trans 'This site <em>only</em> aims to serve as an approximation to show which regions in Austria have the most catching-up to do in terms of building (and therefore probably address) coverage.' %}
                     </li>
-                    <li>It should also be a motivation for people to map buildings and addresses in their area.
+                    <li>
+                        {% trans 'It should also be a motivation for people to map buildings and addresses in their area.' %}
                     </li>
-                    <li>If you use <a href="http://www.basemap.at">basemap.at</a> as a source for mapping, please take the
-                        same quality-assuring measures as always as the map has its inaccuracies and can be quite
-                        out-of-date depending on the region.
+                    <li>
+                        {% trans 'If you use <a href="http://www.basemap.at">basemap.at</a> as a source for mapping, please take the same quality-assuring measures as always as the map has its inaccuracies and can be quite out-of-date depending on the region.' %}
                     </li>
-                    <li>When you map building outlines, please also map the corresponding
-                        <a href="http://wiki.openstreetmap.org/wiki/DE:Key:addr">addresses</a>.
+                    <li>
+                        {% trans 'When you map building outlines, please also map the corresponding <a href="http://wiki.openstreetmap.org/wiki/DE:Key:addr">addresses</a>.' %}
                     </li>
-                    <li>100 % coverage can probably not be reached (without cheating), because of certain inaccuracies
-                        in both maps. Don't make this your goal; instead, use your common sense when interpreting the
-                        numbers and the visual representation of the coverage. Everything around 90 % can probably be
-                        considered practically complete.
+                    <li>
+                        {% trans 'Complete coverage can probably not be reached (without cheating), because of certain inaccuracies in both maps. Do not make this your goal; instead, use your common sense when interpreting the numbers and the visual representation of the coverage. Everything above 85 percent can probably be considered practically complete.' %}
                     </li>
                 </ul>
             </div>
@@ -44,42 +43,41 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1>The Least Covered Regions in Austria</h1>
-            <p>These are the regions that have the most catching-up to do.</p>
+            <h1>{% trans 'The Least Covered Regions in Austria' %}</h1>
+            <p>{% trans 'These are the regions that have the most catching-up to do.' %}</p>
         </div>
         <div class="col-md-6">
-            <h2>Least Covered Districts</h2>
+            <h2>{% trans 'Least Covered Districts' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=least_covered_districts name='districts' %}
         </div>
         <div class="col-md-6">
-            <h2>Least Covered Municipalities</h2>
+            <h2>{% trans 'Least Covered Municipalities' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=least_covered_municipalities name='municipalities' %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-            <h1>Top Regions in Austria</h1>
-            <p>These districts and municipalities and Austria have the best coverage compared to
-               <a href="http://www.basemap.at">basemap.at</a>.</p>
+            <h1>{% trans 'Top Regions in Austria' %}</h1>
+            <p>{% trans 'These regions have the best coverage compared to <a href="http://www.basemap.at">basemap.at</a>.' %}</p>
         </div>
         <div class="col-md-6">
-            <h2>States</h2>
+            <h2>{% trans 'States' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=states parent_boundary=country name='states' %}
         </div>
         <div class="col-md-6">
-            <h2>Top 10 Districts</h2>
+            <h2>{% trans 'Top 10 Districts' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=top_10_districts name='districts' %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <h2>Top 10 Municipalities</h2>
+            <h2>{% trans 'Top 10 Municipalities' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=top_10_municipalities name='municipalities' %}
         </div>
         <div class="col-md-6">
-            <h2>Top 10 Ascending Municipalities</h2>
+            <h2>{% trans 'Top 10 Ascending Municipalities' %}</h2>
             {% include 'table_small.html' with coverage_boundaries=top_10_ascending_municipalities name='municipalities' with_gain=True %}
         </div>
     </div>

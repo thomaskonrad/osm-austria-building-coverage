@@ -1,12 +1,15 @@
+{% load i18n %}
+{% load l10n %}
+
 <div class="map">
     <div class="stats-wrapper container">
         <div class="stats">
-            <span class="coverage-text">{{ coverage_boundary }} has a total building coverage of</span><br />
+            <span class="coverage-text">
+                {% blocktrans %}{{ coverage_boundary }} has a total building coverage of{% endblocktrans %}
+            </span><br />
             <span class="coverage-score">{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage hide_info=True %}</span><br />
             <span class="coverage-gain {% if coverage_boundary.total_coverage_gain >= 0 %}positive{% endif %}">
-                compared to <a href="http://www.basemap.at">basemap.at</a>. That's a difference of
-                ~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %
-                since {{ coverage_boundary.oldest_timestamp|date:"F d, Y" }}.
+                {% blocktrans with total_coverage_gain=coverage_boundary.total_coverage_gain|floatformat:0 oldest_timestamp=coverage_boundary.oldest_timestamp|date:"SHORT_DATE_FORMAT"|localize  %}compared to <a href="http://www.basemap.at">basemap.at</a>. That's a difference of ~{{ total_coverage_gain }} % since {{ oldest_timestamp }}.{% endblocktrans %}
             </span>
         </div>
     </div>
