@@ -139,6 +139,16 @@
             forceSeparateButton: true // force seperate button to detach from zoom buttons, default false
         }).addTo(map);
 
+        {% if disable_scroll_whell_zoom %}
+            map.on('enterFullscreen', function() {
+                map.scrollWheelZoom.enable();
+            });
+
+            map.on('exitFullscreen', function() {
+                map.scrollWheelZoom.disable();
+            });
+        {% endif %}
+
         {% if bbox %}
             map.fitBounds({{ bbox|safe }});
         {% endif %}
