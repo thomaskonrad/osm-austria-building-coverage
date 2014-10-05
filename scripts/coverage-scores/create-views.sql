@@ -233,7 +233,8 @@ create sequence coverage_score_id_seq;
 create materialized view coverage_score as
 
 -- Country
-select nextval('coverage_score_id_seq') as id, c.id as coverage_boundary_id, c.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+select nextval('coverage_score_id_seq') as id, c.id as coverage_boundary_id, c.date,
+  (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
 from coverage_change_date c, coverage_score_base m
 where c.admin_level = 0
 and m.date = (
@@ -246,7 +247,8 @@ group by c.id, c.date
 union all
 
 -- States
-select nextval('coverage_score_id_seq') as id, s.id as coverage_boundary_id, s.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+select nextval('coverage_score_id_seq') as id, s.id as coverage_boundary_id, s.date,
+  (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
 from coverage_change_date s
 left join coverage_score_base m on (m.state_id = s.id)
 where s.admin_level = 1
