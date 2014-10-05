@@ -4,8 +4,8 @@ from django.http import Http404
 from coverage_score_viewer.models import CoverageBoundary
 from coverage_score_viewer.models import CoverageScore
 import pygal
+from pygal.style import LightStyle
 import datetime
-
 import json
 
 
@@ -99,8 +99,8 @@ def coverage_chart(request):
     chart = pygal.DateY(
         x_label_rotation=90,
         range=(0, 100),
-        interpolate='cubic',
         fill=True,
+        style=LightStyle
     )
 
     today = datetime.date.today()

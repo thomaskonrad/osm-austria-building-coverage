@@ -24,26 +24,34 @@
         {% endblocktrans %}
     </p>
 
-    <table class="table table-bordered table-nonfluid table-headings-left">
-        <tbody>
-            <tr>
-                <th>{% trans 'Total Coverage' %}</th>
-                <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Original Coverage' %}</th>
-                <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.original_coverage %}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Difference since the Start' %}</th>
-                <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Latest Changes' %}</th>
-                <td>{{ coverage_boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-bordered table-nonfluid table-headings-left">
+                <tbody>
+                    <tr>
+                        <th>{% trans 'Total Coverage' %}</th>
+                        <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.coverage %}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Original Coverage' %}</th>
+                        <td>{% include "coverage_formatted.html" with coverage=coverage_boundary.original_coverage %}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Difference since the Start' %}</th>
+                        <td>~{{ coverage_boundary.total_coverage_gain|floatformat:0 }} %</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Latest Changes' %}</th>
+                        <td>{{ coverage_boundary.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-8">
+            <img src="/coverage-chart.svg?id={{ coverage_boundary.id }}"/>
+        </div>
+    </div>
+
 
     {% if children %}
         <h2>{{ coverage_boundary.children_admin_level_string }}</h2>
