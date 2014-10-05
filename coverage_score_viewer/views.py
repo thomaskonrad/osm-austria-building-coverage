@@ -4,6 +4,7 @@ from django.http import Http404
 from coverage_score_viewer.models import CoverageBoundary
 from coverage_score_viewer.models import CoverageScore
 import pygal
+import datetime
 
 import json
 
@@ -102,14 +103,21 @@ def coverage_chart(request):
         fill=True,
     )
 
+    today = datetime.date.today()
+
     if boundary_id:
         coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
         coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
 
         values = []
 
-        for coverage_score in coverage_scores:
+        last = len(coverage_scores) - 1
+        for i, coverage_score in enumerate(coverage_scores):
             values.append((coverage_score.date, round(coverage_score.coverage, 1)))
+
+            if i == last and coverage_score.date != today:
+                values.append((today, round(coverage_score.coverage, 1)))
+
 
         chart.add(coverage_boundary.name, values)
     elif admin_level:
@@ -120,8 +128,12 @@ def coverage_chart(request):
 
             values = []
 
-            for coverage_score in coverage_scores:
+            last = len(coverage_scores) - 1
+            for i, coverage_score in enumerate(coverage_scores):
                 values.append((coverage_score.date, round(coverage_score.coverage, 1)))
+
+                if i == last and coverage_score.date != today:
+                    values.append((today, round(coverage_score.coverage, 1)))
 
             chart.add(coverage_boundary.name, values)
 
