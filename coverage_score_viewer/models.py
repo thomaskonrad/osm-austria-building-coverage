@@ -64,3 +64,6 @@ class CoverageScore(models.Model):
     coverage_boundary = models.ForeignKey("CoverageBoundary")
     date = models.DateField()
     coverage = models.FloatField()
+
+    class Meta:
+       db_table = 'coverage_score'

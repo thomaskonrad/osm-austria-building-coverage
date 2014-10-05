@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404
 from coverage_score_viewer.models import CoverageBoundary
+from coverage_score_viewer.models import CoverageScore
 import pygal
-from datetime import datetime, timedelta
+from datetime import date
 
 import json
 
@@ -92,13 +93,17 @@ def municipalities(request):
 
 
 def coverage_chart(request):
-    test_chart = pygal.DateY(x_label_rotation=20)
-    test_chart.add("70409", [
-        (datetime(2014, 10, 1), 76.56),
-        (datetime(2014, 10, 2), 77.83),
-        (datetime(2014, 10, 10), 79.34),
-        (datetime(2014, 11, 2), 86.83),
-    ])
-    test_chart.render()
+    boundary_id = request.GET.get('id')
+    coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
+    coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
+
+    test_chart = pygal.DateY(x_label_rotation=20, range=(0, 100), interpolate='cubic')
+
+    values = []
+
+    for coverage_score in coverage_scores:
+        values.append((coverage_score.date, coverage_score.coverage))
+
+    test_chart.add(coverage_boundary.name, values)
 
     return HttpResponse(test_chart.render(), content_type="image/svg+xml")
