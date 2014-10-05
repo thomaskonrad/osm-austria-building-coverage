@@ -94,10 +94,9 @@ def municipalities(request):
 
 def coverage_chart(request):
     boundary_id = request.GET.get('id')
-    coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
-    coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
+    admin_level = request.GET.get('admin_level')
 
-    test_chart = pygal.DateY(
+    chart = pygal.DateY(
         x_label_rotation=90,
         range=(0, 100),
         interpolate='cubic',
@@ -105,11 +104,27 @@ def coverage_chart(request):
         style=LightGreenStyle,
     )
 
-    values = []
+    if boundary_id:
+        coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
+        coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
 
-    for coverage_score in coverage_scores:
-        values.append((coverage_score.date, coverage_score.coverage))
+        values = []
 
-    test_chart.add(coverage_boundary.name, values)
+        for coverage_score in coverage_scores:
+            values.append((coverage_score.date, coverage_score.coverage))
 
-    return HttpResponse(test_chart.render(), content_type="image/svg+xml")
+        chart.add(coverage_boundary.name, values)
+    elif admin_level:
+        coverage_boundaries = CoverageBoundary.objects.filter(admin_level=admin_level).order_by('rank')[:10]
+
+        for coverage_boundary in coverage_boundaries:
+            coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=coverage_boundary.id)
+
+            values = []
+
+            for coverage_score in coverage_scores:
+                values.append((coverage_score.date, coverage_score.coverage))
+
+            chart.add(coverage_boundary.name, values)
+
+    return HttpResponse(chart.render(), content_type="image/svg+xml")
