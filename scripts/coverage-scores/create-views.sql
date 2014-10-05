@@ -177,13 +177,15 @@ where s.id = 0 and s.admin_level = 0
 group by s.polygon, s.bbox;
 
 
+
 -- Materialized view with all coverage score entries
 drop materialized view if exists coverage_score;
 drop materialized view if exists coverage_change_date;
 drop materialized view if exists coverage_score_base;
+drop sequence coverage_score_id_seq;
 
 create materialized view coverage_score_base as
-select b.gkz::int as id, p.gkz::int as district_id, state.gkz::int as state_id,
+select b.gkz::int as municipality_id, p.gkz::int as district_id, state.gkz::int as state_id,
   c_current.timestamp::date as date,
   max(c_current.total_pixels) as total_pixels, -- We take max() because we are grouping per day, not per timestamp
   max(c_current.covered_basemap_pixels) as covered_basemap_pixels,
@@ -196,7 +198,7 @@ where c_current.municipality_id = b.id
 group by b.gkz, p.gkz::int, state.gkz::int, c_current.timestamp::date;
 
 -- Create indexes
-CREATE INDEX idx_coverage_score_base_id ON coverage_score_base (id);
+CREATE INDEX idx_coverage_score_base_municipality_id ON coverage_score_base (municipality_id);
 CREATE INDEX idx_coverage_score_base_district_id ON coverage_score_base (district_id);
 CREATE INDEX idx_coverage_score_base_state_id ON coverage_score_base (state_id);
 CREATE INDEX idx_coverage_score_base_date ON coverage_score_base (date);
@@ -225,53 +227,55 @@ group by date
 
 order by id, date asc;
 
+create sequence coverage_score_id_seq;
+
 -- Coverage score view
 create materialized view coverage_score as
 
--- Municipalities
-select id, date,
-  (covered_basemap_pixels::float / (covered_basemap_pixels + uncovered_basemap_pixels) * 100.0) as coverage
-from coverage_score_base
-
-union all
-
--- Districts
-select d.id, d.date,
-(sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
-from coverage_change_date d
-left join coverage_score_base m on (m.district_id = d.id)
-where m.date = (
+-- Country
+select nextval('coverage_score_id_seq') as id, c.id as coverage_boundary_id, c.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+from coverage_change_date c, coverage_score_base m
+where c.admin_level = 0
+and m.date = (
   select max(date) from coverage_score_base m2
-  where m.id = m2.id
-  and date <= d.date
+  where m.municipality_id = m2.municipality_id
+  and date <= c.date
 )
-group by d.id, d.date
+group by c.id, c.date
 
 union all
 
 -- States
-select s.id, s.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+select nextval('coverage_score_id_seq') as id, s.id as coverage_boundary_id, s.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
 from coverage_change_date s
 left join coverage_score_base m on (m.state_id = s.id)
 where s.admin_level = 1
 and m.date = (
   select max(date) from coverage_score_base m2
-  where m.id = m2.id
+  where m.municipality_id = m2.municipality_id
   and date <= s.date
 )
 group by s.id, s.date
 
 union all
 
--- Country
-select c.id, c.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
-from coverage_change_date c, coverage_score_base m
-where c.admin_level = 0
-and m.date = (
+-- Districts
+select nextval('coverage_score_id_seq') as id, d.id as coverage_boundary_id, d.date,
+(sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+from coverage_change_date d
+left join coverage_score_base m on (m.district_id = d.id)
+where m.date = (
   select max(date) from coverage_score_base m2
-  where m.id = m2.id
-  and date <= c.date
+  where m.municipality_id = m2.municipality_id
+  and date <= d.date
 )
-group by c.id, c.date
+group by d.id, d.date
 
-order by id, date asc
+union all
+
+-- Municipalities
+select nextval('coverage_score_id_seq') as id, municipality_id as coverage_boundary_id, date,
+  (covered_basemap_pixels::float / (covered_basemap_pixels + uncovered_basemap_pixels) * 100.0) as coverage
+from coverage_score_base
+
+order by coverage_boundary_id, date asc;

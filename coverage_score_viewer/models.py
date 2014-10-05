@@ -57,3 +57,10 @@ class CoverageBoundary(models.Model):
 
     def children_admin_level_string(self, format='plural_upper'):
         return CoverageBoundary.admin_levels[self.admin_level + 1][format]
+
+
+class CoverageScore(models.Model):
+    id = models.IntegerField(primary_key=True)
+    coverage_boundary = models.ForeignKey("CoverageBoundary")
+    date = models.DateField()
+    coverage = models.FloatField()
