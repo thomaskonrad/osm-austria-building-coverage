@@ -23,6 +23,10 @@ def main():
     try:
         cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary_base")
         cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary")
+        cur.execute("ALTER SEQUENCE coverage_score_id_seq RESTART WITH 1")
+        cur.execute("REFRESH MATERIALIZED VIEW coverage_score_base")
+        cur.execute("REFRESH MATERIALIZED VIEW coverage_change_date")
+        cur.execute("REFRESH MATERIALIZED VIEW coverage_score")
         conn.commit()
         
         print("Materialized views successfully updated.")
