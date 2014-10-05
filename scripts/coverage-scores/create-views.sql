@@ -195,6 +195,15 @@ left join austria_admin_boundaries state on (p.parent = state.id)
 where c_current.municipality_id = b.id
 group by b.gkz, p.gkz::int, state.gkz::int, c_current.timestamp::date;
 
+-- Create indexes
+CREATE INDEX idx_coverage_score_base_id ON coverage_score_base (id);
+CREATE INDEX idx_coverage_score_base_district_id ON coverage_score_base (district_id);
+CREATE INDEX idx_coverage_score_base_state_id ON coverage_score_base (state_id);
+CREATE INDEX idx_coverage_score_base_date ON coverage_score_base (date);
+CREATE INDEX idx_coverage_score_base_total_pixels ON coverage_score_base (total_pixels);
+CREATE INDEX idx_coverage_score_base_covered_basemap_pixels ON coverage_score_base (covered_basemap_pixels);
+CREATE INDEX idx_coverage_score_base_uncovered_basemap_pixels ON coverage_score_base (uncovered_basemap_pixels);
+
 -- Change dates of each district
 create materialized view coverage_change_date as
 
