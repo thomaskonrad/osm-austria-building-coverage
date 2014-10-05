@@ -4,7 +4,7 @@ from django.http import Http404
 from coverage_score_viewer.models import CoverageBoundary
 from coverage_score_viewer.models import CoverageScore
 import pygal
-from datetime import date
+from pygal.style import LightGreenStyle
 
 import json
 
@@ -97,7 +97,13 @@ def coverage_chart(request):
     coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
     coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
 
-    test_chart = pygal.DateY(x_label_rotation=20, range=(0, 100), interpolate='cubic')
+    test_chart = pygal.DateY(
+        x_label_rotation=90,
+        range=(0, 100),
+        interpolate='cubic',
+        fill=True,
+        style=LightGreenStyle,
+    )
 
     values = []
 
