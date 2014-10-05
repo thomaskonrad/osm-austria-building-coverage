@@ -179,6 +179,7 @@ group by s.polygon, s.bbox;
 
 -- Materialized view with all coverage score entries
 drop materialized view if exists coverage_score;
+drop materialized view if exists coverage_change_date;
 drop materialized view if exists coverage_score_base;
 
 create materialized view coverage_score_base as
@@ -194,6 +195,27 @@ left join austria_admin_boundaries state on (p.parent = state.id)
 where c_current.municipality_id = b.id
 group by b.gkz, p.gkz::int, state.gkz::int, c_current.timestamp::date;
 
+-- Change dates of each district
+create materialized view coverage_change_date as
+
+select district_id as id, 2 as admin_level, date
+from coverage_score_base
+group by district_id, date
+
+union all
+
+select state_id as id, 1 as admin_level, date
+from coverage_score_base
+group by state_id, date
+
+union all
+
+select 0 as id, 0 as admin_level, date
+from coverage_score_base
+group by date
+
+order by id, date asc;
+
 -- Coverage score view
 create materialized view coverage_score as
 
@@ -204,14 +226,43 @@ from coverage_score_base
 
 union all
 
--- Districts NOT WORKING YET
-select d.district_id, d.date,
-  (sum(distinct m.covered_basemap_pixels)::float / (sum(distinct m.covered_basemap_pixels) + sum(distinct m.uncovered_basemap_pixels)) * 100.0) as coverage
-from coverage_score_base d
-left join coverage_score_base m on (m.district_id = d.district_id)
+-- Districts
+select d.id, d.date,
+(sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+from coverage_change_date d
+left join coverage_score_base m on (m.district_id = d.id)
 where m.date = (
   select max(date) from coverage_score_base m2
   where m.id = m2.id
   and date <= d.date
 )
-group by d.district_id, d.date
+group by d.id, d.date
+
+union all
+
+-- States
+select s.id, s.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+from coverage_change_date s
+left join coverage_score_base m on (m.state_id = s.id)
+where s.admin_level = 1
+and m.date = (
+  select max(date) from coverage_score_base m2
+  where m.id = m2.id
+  and date <= s.date
+)
+group by s.id, s.date
+
+union all
+
+-- Country
+select c.id, c.date, (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0) as coverage
+from coverage_change_date c, coverage_score_base m
+where c.admin_level = 0
+and m.date = (
+  select max(date) from coverage_score_base m2
+  where m.id = m2.id
+  and date <= c.date
+)
+group by c.id, c.date
+
+order by id, date asc
