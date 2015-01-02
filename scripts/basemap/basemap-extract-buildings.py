@@ -16,7 +16,7 @@ def morph(kernel, image, iterations = 1):
 def extractBuildings(file):
     # Define colors
     startColor1 = np.array([174, 174, 217]) # 236, 202, 201
-    endColor1 = np.array([213, 212, 255])
+    endColor1 = np.array([213, 209, 255])
     startColor2 = np.array([152, 150, 206]) #171, 172, 230
     endColor2 = np.array([189, 180, 250])
 
