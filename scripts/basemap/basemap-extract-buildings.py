@@ -57,13 +57,14 @@ def getTransparentImage(width = 256, height = 256):
     return transparent
 
 def main():
-    minX = int(sys.argv[1]) # 34366
-    maxX = int(sys.argv[2]) # 35897
-    minY = int(sys.argv[3]) # 22496
-    maxY = int(sys.argv[4]) # 23220
+    working_directory = sys.argv[1]
+    minX = int(sys.argv[2]) # 34366
+    maxX = int(sys.argv[3]) # 35897
+    minY = int(sys.argv[4]) # 22496
+    maxY = int(sys.argv[5]) # 23220
 
-    originalFilesPath = '../../basemap-tiles-16/%d/%d.jpeg'
-    extractedFilesDirectory = '../../basemap-tiles-16-buildings-extracted/%d/'
+    originalFilesPath = working_directory + "basemap-16/%d/%d.jpeg"
+    extractedFilesDirectory = working_directory + "basemap-tiles-16-buildings-extracted/%d/"
 
     totalNumberOfTiles = (maxX - minX + 1) * (maxY - minY + 1)
     numberOfTilesProcessed = 0
