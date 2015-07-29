@@ -45,6 +45,9 @@ if [ ${exit_code} -eq 0 ]; then
         echo "$(current_time) Incremental coverage scores update: Process finished with exit code ${exit_code}."
 
         # Refresh the coverage score views
-        ${scriptdir}coverage-scores/refresh-materialized-views.py  ${database_name}
+        echo "$(current_time) Refreshing materialized views..."
+        ${scriptdir}coverage-scores/refresh-materialized-views.py ${database_name}
+        exit_code=$?
+        echo "$(current_time) Refresh materialized views: Process finished with exit code ${exit_code}."
     fi
 fi
