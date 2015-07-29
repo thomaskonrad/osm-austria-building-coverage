@@ -20,19 +20,28 @@ def main():
 
     cur = conn.cursor()
 
-    try:
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary_base")
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_boundary")
-        cur.execute("ALTER SEQUENCE coverage_score_id_seq RESTART WITH 1")
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_score_base")
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_change_date")
-        cur.execute("REFRESH MATERIALIZED VIEW coverage_score")
-        conn.commit()
-        
-        print("Materialized views successfully updated.")
-    except Exception as e:
-        print("I can't SELECT! (%s)" % str(e))
-        sys.exit(1)
+    statements = [
+        "REFRESH MATERIALIZED VIEW coverage_boundary_base",
+        "REFRESH MATERIALIZED VIEW coverage_boundary",
+        "ALTER SEQUENCE coverage_score_id_seq RESTART WITH 1",
+        "REFRESH MATERIALIZED VIEW coverage_score_base",
+        "REFRESH MATERIALIZED VIEW coverage_change_date",
+        "REFRESH MATERIALIZED VIEW coverage_score"
+    ]
+
+    for statement in statements:
+        try:
+            cur.execute(statement)
+        except Exception as e:
+            print("I can't SELECT (%s)! The statement causing the error was '%s'." % (str(e), statement))
+            conn.rollback()
+            conn.close()
+            sys.exit(1)
+
+    conn.commit()
+    conn.close()
+    print("Materialized views successfully updated.")
 
 
-if __name__ == "__main__":main()
+if __name__ == "__main__":
+    main()
