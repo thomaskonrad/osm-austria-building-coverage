@@ -235,7 +235,7 @@ create materialized view coverage_score as
 -- Country
 select nextval('coverage_score_id_seq') as id, c.id as coverage_boundary_id, c.date,
   case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100
+    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
     else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
   end as coverage
 from coverage_change_date c, coverage_score_base m
@@ -252,7 +252,7 @@ union all
 -- States
 select nextval('coverage_score_id_seq') as id, s.id as coverage_boundary_id, s.date,
   case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100
+    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
     else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
   end as coverage
 from coverage_change_date s
@@ -270,7 +270,7 @@ union all
 -- Districts
 select nextval('coverage_score_id_seq') as id, d.id as coverage_boundary_id, d.date,
   case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100
+    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
     else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
   end as coverage
 from coverage_change_date d
@@ -287,7 +287,7 @@ union all
 -- Municipalities
 select nextval('coverage_score_id_seq') as id, municipality_id as coverage_boundary_id, date,
   case
-    when (covered_basemap_pixels + uncovered_basemap_pixels) = 0 then 100
+    when (covered_basemap_pixels + uncovered_basemap_pixels) = 0 then 100.0
     else (covered_basemap_pixels::float / (covered_basemap_pixels + uncovered_basemap_pixels) * 100.0)
   end as coverage
 from coverage_score_base
