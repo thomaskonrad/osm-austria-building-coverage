@@ -1,7 +1,7 @@
-#!/opt/local/bin/python2.7
+#!/usr/bin/env python2
 
 import cv2
-import Image
+from PIL import Image
 import numpy as np
 import os
 import sys
@@ -15,10 +15,10 @@ def morph(kernel, image, iterations = 1):
 
 def extractBuildings(file):
     # Define colors
-    startColor1 = np.array([174, 174, 217]) # 236, 202, 201
-    endColor1 = np.array([213, 209, 255])
-    startColor2 = np.array([152, 150, 206]) #171, 172, 230
-    endColor2 = np.array([189, 180, 250])
+    startColor1 = np.array([202, 202, 237]) # 237, 202, 201
+    endColor1 = np.array([202, 202, 237])
+    startColor2 = np.array([172, 172, 230]) #230, 172, 172
+    endColor2 = np.array([172, 172, 230])
 
     img = cv2.imread(file)
     color1 = cv2.inRange(img, startColor1, endColor1)
@@ -63,7 +63,7 @@ def main():
     minY = int(sys.argv[4]) # 22496
     maxY = int(sys.argv[5]) # 23220
 
-    originalFilesPath = working_directory + "basemap-16/%d/%d.jpeg"
+    originalFilesPath = working_directory + "basemap-16/%d/%d.png"
     extractedFilesDirectory = working_directory + "basemap-tiles-16-buildings-extracted/%d/"
 
     totalNumberOfTiles = (maxX - minX + 1) * (maxY - minY + 1)
@@ -82,6 +82,7 @@ def main():
             print("We're on %d / %d." % (x, y))
             original = originalFilesPath % (x, y)
             extracted = currentDirectory + "%d.png" % (y)
+            print(extracted)
 
             if (os.path.exists(extracted)):
                 print("File has already been processed. Skipping.")
