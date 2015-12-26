@@ -20,6 +20,7 @@ Here is a rough outline of the setup process if you want to run the service on y
  * Install required PostgreSQL extensions
     * PostGIS
     * `hstore`
+    * `pgcrypto`
  * Install other required software
     * `osm2pgsql`
     * `osmupdate`
