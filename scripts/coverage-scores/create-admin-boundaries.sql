@@ -23,19 +23,6 @@ create table austria_admin_boundaries
     CONSTRAINT austria_admin_boundaries_pk_id PRIMARY KEY (id)
 );
 
-drop table if exists austria_building_coverage;
-
-create table austria_building_coverage
-(
-    id serial not null,
-    municipality_id integer not null,
-    timestamp timestamptz(0) not null,
-    total_pixels integer not null,
-    covered_basemap_pixels integer not null,
-    uncovered_basemap_pixels integer not null,
-    CONSTRAINT austria_building_coverage_pk_id PRIMARY KEY (id)
-);
-
 -- Select Austrian federal states and insert them
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz)
 (
@@ -179,12 +166,6 @@ ON austria_admin_boundaries (gkz);
 
 CREATE INDEX idx_austria_admin_boundaries_parent
 ON austria_admin_boundaries (parent);
-
-CREATE INDEX idx_austria_building_coverage_municipality_id -- This one is really important
-ON austria_building_coverage (municipality_id);
-
-CREATE INDEX idx_austria_building_coverage_timestamp
-ON austria_building_coverage (timestamp);
 
 -- Create a simplified border polygons and bbox both as GeoJSON and update boundaries table.
 update austria_admin_boundaries b
