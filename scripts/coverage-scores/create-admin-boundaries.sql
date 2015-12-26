@@ -148,13 +148,13 @@ m.name in ('Innere Stadt', 'Liebenau', 'Mühldorf', 'Lend', 'Warth', 'Krumbach')
 
 -- Give the city districts of Graz an "artificial" GKZ
 update austria_admin_boundaries set gkz = '60201' where name = 'Innere Stadt (Graz)';
-update austria_admin_boundaries set gkz = '60202' where name = 'St. Leonhard';
+update austria_admin_boundaries set gkz = '60202' where name = 'Sankt Leonhard';
 update austria_admin_boundaries set gkz = '60203' where name = 'Geidorf';
 update austria_admin_boundaries set gkz = '60204' where name = 'Lend (Graz)';
 update austria_admin_boundaries set gkz = '60205' where name = 'Gries';
 update austria_admin_boundaries set gkz = '60206' where name = 'Jakomini';
 update austria_admin_boundaries set gkz = '60207' where name = 'Liebenau (Graz)';
-update austria_admin_boundaries set gkz = '60208' where name = 'St. Peter';
+update austria_admin_boundaries set gkz = '60208' where name = 'Sankt Peter';
 update austria_admin_boundaries set gkz = '60209' where name = 'Waltendorf';
 update austria_admin_boundaries set gkz = '60210' where name = 'Ries';
 update austria_admin_boundaries set gkz = '60211' where name = 'Mariatrost';
