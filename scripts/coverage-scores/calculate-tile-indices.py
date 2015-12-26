@@ -6,7 +6,7 @@ import re
 import sys
 import os
 import struct
-import Image
+from PIL import Image
 
 
 def deg2num(lat_deg, lon_deg, zoom=16):
