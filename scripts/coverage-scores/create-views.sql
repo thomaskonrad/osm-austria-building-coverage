@@ -4,52 +4,6 @@
 drop materialized view if exists coverage_boundary;
 drop materialized view if exists coverage_boundary_base;
 
-drop table if exists simplified_polygon;
-
-create table simplified_polygon
-(
-  id int not null,
-  admin_level int not null,
-  polygon text,
-  bbox text
-);
-
-insert into simplified_polygon(id, admin_level, polygon, bbox)
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 100)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 100))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 3
-group by b.gkz, b.admin_level
-
-union all
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 500)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 500))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 2
-group by b.gkz, b.admin_level
-
-union all
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 1000)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 1000))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 1
-group by b.gkz, b.admin_level
-
-union all
-
-select 0::int as id, 0 as admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(p.way, 1500)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(p.way, 1500))), 4326)) as bbox
-from planet_osm_polygon p
-where p.admin_level = '2' and p.name='Österreich'
-group by id;
-
 -- Base view
 create materialized view coverage_boundary_base as
 select b.gkz::int as gkz, b.name as name, p.gkz::int as district_id,
@@ -95,7 +49,7 @@ select csb.gkz as id, 3::int as admin_level, csb.name,
   ) as total_coverage_gain,
   s.polygon, s.bbox
 from coverage_boundary_base csb,
-  simplified_polygon s
+  boundary_polygons_simplified s
 where csb.gkz = s.id and s.admin_level = 3
 group by csb.gkz, csb.name, csb.district_id, csb.latest_timestamp, csb.oldest_timestamp, s.polygon, s.bbox
 
@@ -119,7 +73,7 @@ select b.gkz::int as id, 2::int as admin_level, b.name as name,
     (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
   ) as total_coverage_gain,
   s.polygon, s.bbox
-from simplified_polygon s,
+from boundary_polygons_simplified s,
   austria_admin_boundaries b
   left join austria_admin_boundaries p on (b.parent = p.id)
   left join coverage_boundary_base csb on (csb.district_id = b.gkz::int)
@@ -146,7 +100,7 @@ select state.gkz::int as id, 1::int as admin_level, state.name,
     (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
   ) as total_coverage_gain,
   s.polygon, s.bbox
-from simplified_polygon s,
+from boundary_polygons_simplified s,
   austria_admin_boundaries state
   left join austria_admin_boundaries district on (district.parent = state.id)
   left join coverage_boundary_base csb on (csb.district_id = district.gkz::int)
@@ -171,7 +125,7 @@ select 0 as id, 0::int as admin_level, 'Österreich'::text as name, 1::int as ra
     (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
   ) as total_coverage_gain,
   s.polygon, s.bbox
-from simplified_polygon s,
+from boundary_polygons_simplified s,
   coverage_boundary_base csb
 where s.id = 0 and s.admin_level = 0
 group by s.polygon, s.bbox;
