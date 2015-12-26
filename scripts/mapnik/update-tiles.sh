@@ -23,6 +23,9 @@ echo "$(current_time) Generating tiles..."
 ${DIR}generate_tiles_multiprocess.py ${DIR}osm-buildings-only.xml ${tiles_dir} ${zoom_level} ${zoom_level} > /dev/null
 
 if [ $? -eq 0 ]; then
+    # Create the target directory if it does not exist yet.
+    mkdir -p ${tiles_root_dir}${tiles_dir_base_name}-current/${zoom_level}/
+
     echo "$(current_time) Syncing highest zoom level with current tiles..."
     rsync -vrc --stats ${tiles_dir}/${zoom_level}/ ${tiles_root_dir}${tiles_dir_base_name}-current/${zoom_level}/
     echo "$(current_time) Done!"
