@@ -19,11 +19,15 @@ def extractBuildings(file):
     endColor1 = np.array([202, 202, 237])
     startColor2 = np.array([172, 172, 230]) #230, 172, 172
     endColor2 = np.array([172, 172, 230])
+    startColor3 = np.array([240, 242, 242]) #242, 242, 240
+    endColor3 = np.array([240, 242, 242])
 
     img = cv2.imread(file)
     color1 = cv2.inRange(img, startColor1, endColor1)
     color2 = cv2.inRange(img, startColor2, endColor2)
-    combined = cv2.bitwise_or(color1, color2)
+    color3 = cv2.inRange(img, startColor3, endColor3)
+    combined1 = cv2.bitwise_or(color1, color2)
+    combined = cv2.bitwise_or(combined1, color3)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     combined = morph(kernel, combined)
@@ -63,8 +67,8 @@ def main():
     minY = int(sys.argv[4]) # 22496
     maxY = int(sys.argv[5]) # 23220
 
-    originalFilesPath = working_directory + "basemap-16/%d/%d.png"
-    extractedFilesDirectory = working_directory + "basemap-tiles-16-buildings-extracted/%d/"
+    originalFilesPath = working_directory + "basemap/16/%d/%d.png"
+    extractedFilesDirectory = working_directory + "basemap-buildings-extracted-b/16/%d/"
 
     totalNumberOfTiles = (maxX - minX + 1) * (maxY - minY + 1)
     numberOfTilesProcessed = 0

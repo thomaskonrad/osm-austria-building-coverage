@@ -65,7 +65,8 @@ def main():
         cur.execute("SELECT id, name, ST_AsEWKT(ST_Transform(bbox, 4326)), color "
                     "from austria_admin_boundaries "
                     "where admin_level=3 "
-                    "and (full_tiles is null or partial_tiles is null)")
+                    "and (full_tiles is null or full_tiles = '{}'"
+                    "or partial_tiles is null or partial_tiles = '{}')")
     except:
         print("I can't SELECT!")
 
