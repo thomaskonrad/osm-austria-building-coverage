@@ -11,7 +11,9 @@ create table austria_admin_boundaries
     name text,
     abbreviation text,
     way geometry,
+    simplified_way_geojson text,
     bbox geometry,
+    bbox_geojson text,
     full_tiles integer[][],
     partial_tiles integer[][],
     way_area real,
@@ -184,49 +186,13 @@ ON austria_building_coverage (municipality_id);
 CREATE INDEX idx_austria_building_coverage_timestamp
 ON austria_building_coverage (timestamp);
 
--- Create a table with simplified border polygons
-drop table if exists boundary_polygons_simplified;
-
-create table boundary_polygons_simplified
-(
-  id int not null,
-  admin_level int not null,
-  polygon text,
-  bbox text
-);
-
-insert into boundary_polygons_simplified(id, admin_level, polygon, bbox)
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 100)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 100))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 3
-group by b.gkz, b.admin_level
-
-union all
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 500)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 500))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 2
-group by b.gkz, b.admin_level
-
-union all
-
-select b.gkz::int as id, b.admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b.way, 1000)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b.way, 1000))), 4326)) as bbox
-from austria_admin_boundaries b
-where b.admin_level = 1
-group by b.gkz, b.admin_level
-
-union all
-
-select 0::int as id, 0 as admin_level,
-ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(p.way, 1500)), 4326)) as polygon,
-ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(p.way, 1500))), 4326)) as bbox
-from planet_osm_polygon p
-where p.admin_level = '2' and p.name='Österreich'
-group by id;
+-- Create a simplified border polygons and bbox both as GeoJSON and update boundaries table.
+update austria_admin_boundaries b
+set simplified_way_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b2.way, 100)), 4326))
+     from austria_admin_boundaries b2
+     where b.id = b2.id),
+bbox_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b3.way, 100))), 4326))
+     from austria_admin_boundaries b3
+     where b.id = b3.id);
