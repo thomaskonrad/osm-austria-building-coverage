@@ -224,9 +224,9 @@ def main():
                     )
                     conn.commit()
                 # We update the timestamp only if the entry count is higher than one. The problem is that if a tile is
-                # updated that is part of the municipality's tile set but does not affect the municipality, the timestamp of
-                # the last coverage is simply updated. That may lead to the case where some municipalities do not have an
-                # austria_building_coverage entry on the first day.
+                # updated that is part of the municipality's tile set but does not affect the municipality, the
+                # timestamp of the last coverage is simply updated. That may lead to the case where some municipalities
+                # do not have an austria_building_coverage entry on the first day.
                 elif entry_count > 1:
                     print("The latest timestamp of the tiles of municipality %s has changed but these changes did not "
                           "affect this municipality. Only updating the timestsamp of entry %d." % (name, coverage_rows[0][0]))
@@ -239,9 +239,9 @@ def main():
                     conn.commit()
                 else:
                     print("The latest timestamp of the tiles of municipality %s has changed but these changes did not "
-                          "affect this municipality. Not updating the timestamp anyway because the municipality has only "
-                          "one coverage score entry. Updating the timestamp would cause the municipality not to have a "
-                          "score entry on the first day.")
+                          "affect this municipality. Not updating the timestamp anyway because the municipality has "
+                          "only one coverage score entry. Updating the timestamp would cause the municipality not to "
+                          "have a score entry on the first day.")
 
 
     # Alright, all municipalities updated. Now let's update the total coverage scores of districts, federal states and
@@ -264,7 +264,7 @@ def main():
 
         for district in districts_to_update:
             district_id = district[0]
-            cur.execute("""select max(mc.timestamp), sum(mc.covered_basemap_pixels), sum(mc.total_basemap_pixels)
+            cur.execute("""select extract(epoch from max(mc.timestamp)), sum(mc.covered_basemap_pixels), sum(mc.total_basemap_pixels)
                         from austria_admin_boundaries d
                         left join austria_admin_boundaries m on (m.parent = d.id)
                         left join austria_building_coverage mc on (mc.boundary_id = m.id)
@@ -289,9 +289,9 @@ def main():
                         ")",
                         (
                             district_id,
-                            "%.0f" % result[0],
-                            result[1],
-                            result[2],
+                            "%.0f" % result[0][0],
+                            result[0][1],
+                            result[0][2],
                             district_coverage,
                         )
                     )
