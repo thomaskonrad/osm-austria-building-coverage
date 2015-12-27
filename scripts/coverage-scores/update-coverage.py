@@ -97,6 +97,25 @@ def get_latest_timestamp(tile_indices, full_schemata, zoom):
     return math.floor(latest_timestamp)
 
 
+def get_number_of_coverage_entries(cur, boundary_id):
+    cur.execute("select count(*) from austria_building_coverage where boundary_id = %s", (boundary_id,))
+    return cur.fetchone()[0]
+
+
+def get_latest_coverage_entry(cur, boundary_id):
+    cur.execute("""
+                select c1.id as id, extract(epoch from c1.timestamp) as latest_timestamp,
+                c1.covered_basemap_pixels, c1.total_basemap_pixels, c1.coverage
+                from austria_building_coverage c1
+                where boundary_id = %s
+                and timestamp =
+                    (select max(timestamp) from austria_building_coverage c2
+                    where c2.boundary_id = c1.boundary_id)
+                """,
+                (boundary_id,))
+    return cur.fetchone()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Update the coverage scores of each outdated municipality.")
 
@@ -165,17 +184,9 @@ def main():
             partial_tiles = municipality[3]
             color = municipality[4]
 
-            cur.execute("select count(*) from austria_building_coverage where boundary_id = %s", (id,))
-            entry_count = cur.fetchone()[0]
+            entry_count = get_number_of_coverage_entries(cur, id)
 
-            cur.execute("select c1.id as id, extract(epoch from c1.timestamp) as latest_timestamp,"
-                        "c1.covered_basemap_pixels, c1.total_basemap_pixels, c1.coverage "
-                        "from austria_building_coverage c1 "
-                        "where boundary_id = %s "
-                        "and timestamp = "
-                        "(select max(timestamp) from austria_building_coverage c2 "
-                        "where c2.boundary_id = c1.boundary_id)", (id, ))
-            coverage_rows = cur.fetchall()
+            latest_coverage_row = get_latest_coverage_entry(cur, id)
 
             latest_tile_timestamp = get_latest_timestamp(
                 full_tiles + partial_tiles,
@@ -185,7 +196,7 @@ def main():
                 ],
                 zoom)
 
-            if len(coverage_rows) == 0 or coverage_rows[0][1] < latest_tile_timestamp:
+            if latest_coverage_row is None or latest_coverage_row[1] < latest_tile_timestamp:
                 print("Municipality %s (ID %d) is out of date. Updating..." % (name, id))
 
                 (covered_basemap_pixels_full, uncovered_basemap_pixels_full) = \
@@ -205,8 +216,8 @@ def main():
                     coverage = 0.0
 
                 # Only insert the values if no entry exists yet or if the values have actually changed.
-                if len(coverage_rows) == 0 or coverage_rows[0][2] != covered_basemap_pixels or \
-                    coverage_rows[0][3] != total_basemap_pixels:
+                if latest_coverage_row is None or latest_coverage_row[2] != covered_basemap_pixels or \
+                    latest_coverage_row[3] != total_basemap_pixels:
                     municipalities_coverage_updated.append(id)
 
                     cur.execute("insert into austria_building_coverage "
@@ -216,7 +227,7 @@ def main():
                         ")",
                         (
                             id,
-                            "%.0f" %latest_tile_timestamp,
+                            "%.0f" % latest_tile_timestamp,
                             covered_basemap_pixels,
                             total_basemap_pixels,
                             coverage,
@@ -229,13 +240,13 @@ def main():
                 # do not have an austria_building_coverage entry on the first day.
                 elif entry_count > 1:
                     print("The latest timestamp of the tiles of municipality %s has changed but these changes did not "
-                          "affect this municipality. Only updating the timestsamp of entry %d." % (name, coverage_rows[0][0]))
+                          "affect this municipality. Only updating the timestsamp of entry %d." % (name, latest_coverage_row[0]))
 
                     municipalities_only_timestamp_updated.append(id)
 
                     statement = "update austria_building_coverage set timestamp = to_timestamp(%.0f) " \
                                 "where id = %s"
-                    cur.execute(statement, (latest_tile_timestamp, coverage_rows[0][0],))
+                    cur.execute(statement, (latest_tile_timestamp, latest_coverage_row[0],))
                     conn.commit()
                 else:
                     print("The latest timestamp of the tiles of municipality %s has changed but these changes did not "
@@ -264,23 +275,26 @@ def main():
 
         for district in districts_to_update:
             district_id = district[0]
-            cur.execute("""select extract(epoch from max(mc.timestamp)), sum(mc.covered_basemap_pixels), sum(mc.total_basemap_pixels)
+            cur.execute("""select d.name, extract(epoch from max(mc.timestamp)), sum(mc.covered_basemap_pixels), sum(mc.total_basemap_pixels)
                         from austria_admin_boundaries d
                         left join austria_admin_boundaries m on (m.parent = d.id)
                         left join austria_building_coverage mc on (mc.boundary_id = m.id)
                         where mc.timestamp = (select max(timestamp) from austria_building_coverage mc2 where mc.boundary_id = mc2.boundary_id)
                         and d.id = %s
+                        group by d.name
                         """,
                         (district_id,))
 
-            result = cur.fetchall()
+            result = cur.fetchone()
 
-            if len(result) > 0:
+            if result is not None and result[0] is not None:
                 # Calculate district coverage and avoid division by zero
-                if result[0][2] > 0:
-                    district_coverage = result[0][1] / result[0][2] * 100.0
+                if result[3] > 0:
+                    district_coverage = result[2] / result[3] * 100.0
                 else:
                     district_coverage = 0.0
+
+                print("Calculated coverage of district '%s' (coverage: %.2f percent)." % (result[0], district_coverage))
 
                 cur.execute("insert into austria_building_coverage "
                         "(boundary_id, timestamp, covered_basemap_pixels, total_basemap_pixels, coverage) "
@@ -289,9 +303,9 @@ def main():
                         ")",
                         (
                             district_id,
-                            "%.0f" % result[0][0],
-                            result[0][1],
-                            result[0][2],
+                            "%.0f" % result[1],
+                            result[2],
+                            result[3],
                             district_coverage,
                         )
                     )
@@ -300,4 +314,5 @@ def main():
                 print("Error: No coverage results of district %d could be calculated." % district_id)
 
 
-if __name__ == "__main__":main()
+if __name__ == "__main__":
+    main()
