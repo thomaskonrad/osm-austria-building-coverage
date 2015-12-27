@@ -166,7 +166,7 @@ def main():
             color = municipality[4]
 
             cur.execute("select count(*) from austria_building_coverage where boundary_id = %s", (id,))
-            entry_count = cur.fetchone[0]
+            entry_count = cur.fetchone()[0]
 
             cur.execute("select c1.id as id, extract(epoch from c1.timestamp) as latest_timestamp,"
                         "c1.covered_basemap_pixels, c1.total_basemap_pixels, c1.coverage "
