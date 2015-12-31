@@ -23,14 +23,25 @@ create table austria_admin_boundaries
     CONSTRAINT austria_admin_boundaries_pk_id PRIMARY KEY (id)
 );
 
--- Select Austrian federal states and insert them
+-- Select Austria itself and insert it
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz)
 (
-    select 1 as admin_level, p.name, p.way, ST_Envelope(p.way) as bbox, p.way_area, r.tags::hstore->'ref:at:gkz' as gkz
+    select 0 as admin_level, 'Österreich' as name, ST_Collect(p.way) as way, ST_Envelope(ST_Collect(p.way)) as bbox, sum(p.way_area), 0 as gkz
+    from planet_osm_polygon p
+    where p.admin_level = '2' and p.name='Österreich'
+    group by admin_level, name, gkz
+);
+
+-- Select Austrian federal states and insert them
+insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
+(
+    select 1 as admin_level, p.name, ST_Collect(p.way) as way, ST_Envelope(ST_Collect(p.way)) as bbox, sum(p.way_area),
+      r.tags::hstore->'ref:at:gkz' as gkz, (select id from austria_admin_boundaries where name = 'Österreich') as parent
     from planet_osm_polygon p, planet_osm_rels r
     where boundary='administrative' and admin_level='4'
     and r.tags::hstore ? 'ref:at:gkz'
     and (p.osm_id * -1) = r.id
+    group by admin_level, p.name, gkz
     order by gkz
 );
 
@@ -51,7 +62,7 @@ update austria_admin_boundaries set gkz='9' where admin_level = 1 and gkz='9,900
 -- Insert districts
 insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox, way_area, gkz, parent)
 (
-    select 2 as admin_level, p.name, r.tags::hstore->'ref', p.way, ST_Envelope(p.way) as bbox, p.way_area, r.tags::hstore->'ref:at:gkz', parent.id
+    select 2 as admin_level, p.name, r.tags::hstore->'ref' as ref, ST_Collect(p.way), ST_Envelope(ST_Collect(p.way)) as bbox, sum(p.way_area), r.tags::hstore->'ref:at:gkz' as gkz, parent.id
     from planet_osm_rels r, planet_osm_polygon p
     left join austria_admin_boundaries parent on (parent.admin_level=1 and ST_Within(p.way, parent.way))
     where boundary='administrative'
@@ -62,6 +73,7 @@ insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox
         )
     and r.tags::hstore ? 'ref:at:gkz'
     and (p.osm_id * -1) = r.id
+    group by 1, p.name, r.tags, gkz, parent.id
     order by gkz
 );
 
@@ -73,7 +85,7 @@ update austria_admin_boundaries set gkz='10201' where admin_level = 3 and name='
 -- Insert all municipalities (takes 55 seconds on my machine)
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
 (
-    select 3 as admin_level, p.name, p.way, ST_Envelope(p.way) as bbox, p.way_area, r.tags::hstore->'ref:at:gkz' as gkz, parent.id
+    select 3 as admin_level, p.name, ST_Collect(p.way), ST_Envelope(ST_Collect(p.way)) as bbox, sum(p.way_area), r.tags::hstore->'ref:at:gkz' as gkz, parent.id
     from planet_osm_rels r,
     planet_osm_polygon p
     left join austria_admin_boundaries parent on (parent.admin_level=2 and ST_Within(p.way, parent.way))
@@ -93,6 +105,7 @@ insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gk
         and
         (not r.tags::hstore ? 'end_date' or (r.tags::hstore->'end_date')::date > now())
     )
+    group by 1, p.name, r.tags, parent.id
     order by gkz
 );
 
@@ -101,13 +114,14 @@ update austria_admin_boundaries set gkz='61214' where name = 'Großsölk';
 -- Insert city districts / municipalities as municipalities
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
 (
-    select 3 as admin_level, p.name, p.way, ST_Envelope(p.way) as bbox, p.way_area, r.tags::hstore->'ref:at:gkz' as gkz, parent.id
+    select 3 as admin_level, p.name, ST_Collect(p.way), ST_Envelope(ST_Collect(p.way)) as bbox, sum(p.way_area), r.tags::hstore->'ref:at:gkz' as gkz, parent.id
     from planet_osm_rels r,
     planet_osm_polygon p
     left join austria_admin_boundaries parent on (parent.admin_level=2 and ST_Within(p.way, parent.way))
     where p.boundary='administrative' and p.admin_level='9'
     and (p.osm_id * -1) = r.id
     and parent.name in ('Wien', 'Graz') -- Only these cities have complete district polygons
+    group by 1, p.name, r.tags, parent.id
     order by gkz
 );
 
@@ -168,6 +182,7 @@ CREATE INDEX idx_austria_admin_boundaries_parent
 ON austria_admin_boundaries (parent);
 
 -- Create a simplified border polygons and bbox both as GeoJSON and update boundaries table.
+-- Municipalities
 update austria_admin_boundaries b
 set simplified_way_geojson =
     (select ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b2.way, 100)), 4326))
@@ -176,4 +191,41 @@ set simplified_way_geojson =
 bbox_geojson =
     (select ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b3.way, 100))), 4326))
      from austria_admin_boundaries b3
-     where b.id = b3.id);
+     where b.id = b3.id)
+where b.admin_level = 3;
+
+-- Districts
+update austria_admin_boundaries b
+set simplified_way_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b2.way, 500)), 4326))
+     from austria_admin_boundaries b2
+     where b.id = b2.id),
+bbox_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b3.way, 500))), 4326))
+     from austria_admin_boundaries b3
+     where b.id = b3.id)
+where b.admin_level = 2;
+
+-- States
+update austria_admin_boundaries b
+set simplified_way_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b2.way, 1000)), 4326))
+     from austria_admin_boundaries b2
+     where b.id = b2.id),
+bbox_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b3.way, 1000))), 4326))
+     from austria_admin_boundaries b3
+     where b.id = b3.id)
+where b.admin_level = 1;
+
+-- Country
+update austria_admin_boundaries b
+set simplified_way_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Collect(ST_Simplify(b2.way, 1500)), 4326))
+     from austria_admin_boundaries b2
+     where b.id = b2.id),
+bbox_geojson =
+    (select ST_AsGeoJSON(ST_Transform(ST_Envelope(ST_Collect(ST_Simplify(b3.way, 1500))), 4326))
+     from austria_admin_boundaries b3
+     where b.id = b3.id)
+where b.admin_level = 0;
