@@ -16,6 +16,8 @@ Here is a rough outline of the setup process if you want to run the service on y
     * `numpy`
     * `cv2`
     * `requests`
+    * `django`
+    * `pygal`
  * Install PostgreSQL 9.x
  * Install required PostgreSQL extensions
     * PostGIS
