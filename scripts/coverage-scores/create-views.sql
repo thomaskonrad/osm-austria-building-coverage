@@ -48,5 +48,6 @@ from austria_admin_boundaries b
 drop view if exists coverage_score;
 
 create view coverage_score as
-select id, boundary_id as coverage_boundary_id, timestamp::date as date, coverage
-from austria_building_coverage;
+select c.id, b.gkz::int as coverage_boundary_id, c.timestamp::date as date, c.coverage
+from austria_building_coverage c
+  left join austria_admin_boundaries b on (c.boundary_id = b.id)
