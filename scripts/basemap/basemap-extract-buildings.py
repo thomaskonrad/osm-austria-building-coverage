@@ -19,18 +19,18 @@ def extractBuildings(file):
     endColor1 = np.array([202, 202, 237])
     startColor2 = np.array([172, 172, 230]) #230, 172, 172
     endColor2 = np.array([172, 172, 230])
-    startColor3 = np.array([240, 242, 242]) #242, 242, 240
-    endColor3 = np.array([240, 242, 242])
+    #startColor3 = np.array([240, 242, 242]) #242, 242, 240
+    #endColor3 = np.array([240, 242, 242])
 
     img = cv2.imread(file)
     color1 = cv2.inRange(img, startColor1, endColor1)
     color2 = cv2.inRange(img, startColor2, endColor2)
-    color3 = cv2.inRange(img, startColor3, endColor3)
+    #color3 = cv2.inRange(img, startColor3, endColor3)
     combined1 = cv2.bitwise_or(color1, color2)
-    combined = cv2.bitwise_or(combined1, color3)
+    #combined = cv2.bitwise_or(combined1, color3)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
-    combined = morph(kernel, combined)
+    combined = morph(kernel, combined1)
 
     combined = cv2.bitwise_not(combined)
     image = Image.fromarray(combined)
