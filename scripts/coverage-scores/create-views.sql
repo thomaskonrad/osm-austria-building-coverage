@@ -1,249 +1,52 @@
--- Create simplified admin polygons
-
--- Drop views first
+-- Create covarage_boundary view.
 drop materialized view if exists coverage_boundary;
-drop materialized view if exists coverage_boundary_base;
 
--- Base view
-create materialized view coverage_boundary_base as
-select b.gkz::int as gkz, b.name as name, p.gkz::int as district_id,
-  max(c_current.timestamp) as latest_timestamp,
-  min(c_original.timestamp) as oldest_timestamp,
-  sum(c_current.total_pixels) as total_pixels,
-  sum(c_current.covered_basemap_pixels) as covered_basemap_pixels,
-  sum(c_current.uncovered_basemap_pixels) as uncovered_basemap_pixels,
-  sum(c_original.covered_basemap_pixels) as covered_basemap_pixels_original,
-  sum(c_original.uncovered_basemap_pixels) as uncovered_basemap_pixels_original
-from austria_building_coverage c_original,
-  austria_building_coverage c_current
-left join austria_admin_boundaries b on (c_current.municipality_id = b.id)
-left join austria_admin_boundaries p on (b.parent = p.id)
-where c_current.timestamp = (
-  select max(timestamp) from austria_building_coverage c1 -- The newest timestamp
-  where c_current.municipality_id = c1.municipality_id)
-and c_original.municipality_id = b.id
-and c_original.timestamp = (
-  select min(timestamp) from austria_building_coverage c2
-  where c_original.municipality_id = c2.municipality_id
-)
-group by b.gkz, b.name, p.gkz;
-
--- Coverage boundary view
 create materialized view coverage_boundary as
-
--- Municipalities
-select csb.gkz as id, 3::int as admin_level, csb.name,
-  rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
-  csb.district_id as parent_id,
-  csb.latest_timestamp,
-  csb.oldest_timestamp,
-  sum(csb.total_pixels) as total_pixels,
-  sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
-  sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
-  (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0) as coverage,
-  (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0) as original_coverage,
+select b.gkz::int as id, b.admin_level, b.name,
+  rank() over (partition by b.admin_level order by coverage desc) as rank,
+  parent.gkz::int as parent_id,
+  (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id) as latest_timestamp,
+  (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id) as oldest_timestamp,
   (
-    (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)
-    -
-    (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
-  ) as total_coverage_gain,
-  s.polygon, s.bbox
-from coverage_boundary_base csb,
-  boundary_polygons_simplified s
-where csb.gkz = s.id and s.admin_level = 3
-group by csb.gkz, csb.name, csb.district_id, csb.latest_timestamp, csb.oldest_timestamp, s.polygon, s.bbox
-
-
-union all
-
--- Districts
-select b.gkz::int as id, 2::int as admin_level, b.name as name,
-  rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
-  p.gkz::int as parent_id,
-  max(csb.latest_timestamp) as latest_timestamp,
-  min(csb.oldest_timestamp) as oldest_timestamp,
-  sum(csb.total_pixels) as total_pixels,
-  sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
-  sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
-  (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0) as coverage,
-  (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0) as original_coverage,
+    select c1.coverage
+    from austria_building_coverage c1
+    where c1.boundary_id = b.id and timestamp =
+      (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+  ) as coverage,
   (
-    (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)
-    -
-    (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
-  ) as total_coverage_gain,
-  s.polygon, s.bbox
-from boundary_polygons_simplified s,
-  austria_admin_boundaries b
-  left join austria_admin_boundaries p on (b.parent = p.id)
-  left join coverage_boundary_base csb on (csb.district_id = b.gkz::int)
-where b.admin_level = 2
-  and b.gkz::int = s.id and s.admin_level = 2
-group by b.gkz::int, b.name, p.gkz, s.polygon, s.bbox
-
-union all
-
--- States
-select state.gkz::int as id, 1::int as admin_level, state.name,
-  rank() over(order by (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)  desc) as rank,
-  0::int as parent_id,
-  max(csb.latest_timestamp) as latest_timestamp,
-  min(csb.oldest_timestamp) as oldest_timestamp,
-  sum(csb.total_pixels) as total_pixels,
-  sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
-  sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
-  (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0) as coverage,
-  (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0) as original_coverage,
+    select c4.coverage
+    from austria_building_coverage c4
+    where c4.boundary_id = b.id and timestamp =
+      (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+  ) as original_coverage,
   (
-    (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)
+    (
+      SELECT c1.coverage
+      FROM austria_building_coverage c1
+      WHERE c1.boundary_id = b.id AND timestamp =
+                                      (SELECT max(c1.timestamp)
+                                       FROM austria_building_coverage c1
+                                       WHERE c1.boundary_id = b.id)
+    )
     -
-    (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
+    (
+    select c4.coverage
+    from austria_building_coverage c4
+    where c4.boundary_id = b.id and timestamp =
+      (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+    )
   ) as total_coverage_gain,
-  s.polygon, s.bbox
-from boundary_polygons_simplified s,
-  austria_admin_boundaries state
-  left join austria_admin_boundaries district on (district.parent = state.id)
-  left join coverage_boundary_base csb on (csb.district_id = district.gkz::int)
-where state.admin_level = 1
-  and state.gkz::int = s.id and s.admin_level = 1
-group by state.gkz, state.name, s.polygon, s.bbox
-
-union all
-
--- Countries
-select 0 as id, 0::int as admin_level, 'Österreich'::text as name, 1::int as rank, null as parent_id,
-  max(csb.latest_timestamp) as latest_timestamp,
-  min(csb.oldest_timestamp) as oldest_timestamp,
-  sum(csb.total_pixels) as total_pixels,
-  sum(csb.covered_basemap_pixels) as covered_basemap_pixels,
-  sum(csb.uncovered_basemap_pixels) as uncovered_basemap_pixels,
-  (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0) as coverage,
-  (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0) as original_coverage,
-  (
-    (sum(csb.covered_basemap_pixels)::float / (sum(csb.covered_basemap_pixels) + sum(csb.uncovered_basemap_pixels)) * 100.0)
-    -
-    (sum(csb.covered_basemap_pixels_original)::float / (sum(csb.covered_basemap_pixels_original) + sum(csb.uncovered_basemap_pixels_original)) * 100.0)
-  ) as total_coverage_gain,
-  s.polygon, s.bbox
-from boundary_polygons_simplified s,
-  coverage_boundary_base csb
-where s.id = 0 and s.admin_level = 0
-group by s.polygon, s.bbox;
+  b.simplified_way_geojson as polygon,
+  b.bbox_geojson as bbox
+from austria_admin_boundaries b
+  left join austria_admin_boundaries parent on (b.parent = parent.id)
+  left join austria_building_coverage c on (c.boundary_id = b.id)
+;
 
 
+-- Create coverage score view.
+drop view if exists coverage_score;
 
--- Materialized view with all coverage score entries
-drop materialized view if exists coverage_score;
-drop materialized view if exists coverage_change_date;
-drop materialized view if exists coverage_score_base;
-drop sequence coverage_score_id_seq;
-
-create materialized view coverage_score_base as
-select b.gkz::int as municipality_id, p.gkz::int as district_id, state.gkz::int as state_id,
-  c_current.timestamp::date as date,
-  max(c_current.total_pixels) as total_pixels, -- We take max() because we are grouping per day, not per timestamp
-  max(c_current.covered_basemap_pixels) as covered_basemap_pixels,
-  max(c_current.uncovered_basemap_pixels) as uncovered_basemap_pixels
-from austria_building_coverage c_current
-left join austria_admin_boundaries b on (c_current.municipality_id = b.id)
-left join austria_admin_boundaries p on (b.parent = p.id)
-left join austria_admin_boundaries state on (p.parent = state.id)
-where c_current.municipality_id = b.id
-group by b.gkz, p.gkz::int, state.gkz::int, c_current.timestamp::date;
-
--- Create indexes
-CREATE INDEX idx_coverage_score_base_municipality_id ON coverage_score_base (municipality_id);
-CREATE INDEX idx_coverage_score_base_district_id ON coverage_score_base (district_id);
-CREATE INDEX idx_coverage_score_base_state_id ON coverage_score_base (state_id);
-CREATE INDEX idx_coverage_score_base_date ON coverage_score_base (date);
-CREATE INDEX idx_coverage_score_base_total_pixels ON coverage_score_base (total_pixels);
-CREATE INDEX idx_coverage_score_base_covered_basemap_pixels ON coverage_score_base (covered_basemap_pixels);
-CREATE INDEX idx_coverage_score_base_uncovered_basemap_pixels ON coverage_score_base (uncovered_basemap_pixels);
-
--- Change dates of each district
-create materialized view coverage_change_date as
-
-select district_id as id, 2 as admin_level, date
-from coverage_score_base
-group by district_id, date
-
-union all
-
-select state_id as id, 1 as admin_level, date
-from coverage_score_base
-group by state_id, date
-
-union all
-
-select 0 as id, 0 as admin_level, date
-from coverage_score_base
-group by date
-
-order by id, date asc;
-
-create sequence coverage_score_id_seq;
-
--- Coverage score view
-create materialized view coverage_score as
-
--- Country
-select nextval('coverage_score_id_seq') as id, c.id as coverage_boundary_id, c.date,
-  case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
-    else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
-  end as coverage
-from coverage_change_date c, coverage_score_base m
-where c.admin_level = 0
-and m.date = (
-  select max(date) from coverage_score_base m2
-  where m.municipality_id = m2.municipality_id
-  and date <= c.date
-)
-group by c.id, c.date
-
-union all
-
--- States
-select nextval('coverage_score_id_seq') as id, s.id as coverage_boundary_id, s.date,
-  case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
-    else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
-  end as coverage
-from coverage_change_date s
-left join coverage_score_base m on (m.state_id = s.id)
-where s.admin_level = 1
-and m.date = (
-  select max(date) from coverage_score_base m2
-  where m.municipality_id = m2.municipality_id
-  and date <= s.date
-)
-group by s.id, s.date
-
-union all
-
--- Districts
-select nextval('coverage_score_id_seq') as id, d.id as coverage_boundary_id, d.date,
-  case
-    when (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) = 0 then 100.0
-    else (sum(m.covered_basemap_pixels)::float / (sum(m.covered_basemap_pixels) + sum(m.uncovered_basemap_pixels)) * 100.0)
-  end as coverage
-from coverage_change_date d
-left join coverage_score_base m on (m.district_id = d.id)
-where m.date = (
-  select max(date) from coverage_score_base m2
-  where m.municipality_id = m2.municipality_id
-  and date <= d.date
-)
-group by d.id, d.date
-
-union all
-
--- Municipalities
-select nextval('coverage_score_id_seq') as id, municipality_id as coverage_boundary_id, date,
-  case
-    when (covered_basemap_pixels + uncovered_basemap_pixels) = 0 then 100.0
-    else (covered_basemap_pixels::float / (covered_basemap_pixels + uncovered_basemap_pixels) * 100.0)
-  end as coverage
-from coverage_score_base
-
-order by coverage_boundary_id, date asc;
+create view coverage_score as
+select id, boundary_id as coverage_boundary_id, timestamp::date as date, coverage
+from austria_building_coverage;
