@@ -21,12 +21,7 @@ def main():
     cur = conn.cursor()
 
     statements = [
-        "REFRESH MATERIALIZED VIEW coverage_boundary_base",
-        "REFRESH MATERIALIZED VIEW coverage_boundary",
-        "ALTER SEQUENCE coverage_score_id_seq RESTART WITH 1",
-        "REFRESH MATERIALIZED VIEW coverage_score_base",
-        "REFRESH MATERIALIZED VIEW coverage_change_date",
-        "REFRESH MATERIALIZED VIEW coverage_score"
+        "REFRESH MATERIALIZED VIEW coverage_boundary"
     ]
 
     for statement in statements:
