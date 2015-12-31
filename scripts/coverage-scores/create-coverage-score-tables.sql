@@ -11,7 +11,6 @@ CREATE TABLE austria_building_coverage
   CONSTRAINT austria_building_coverage_pk_id PRIMARY KEY (id)
 );
 
-
 CREATE INDEX idx_austria_building_coverage_municipality_id -- This one is really important
 ON austria_building_coverage (boundary_id);
 
