@@ -5,7 +5,7 @@ from coverage_score_viewer.models import CoverageBoundary
 from coverage_score_viewer.models import CoverageScore
 import pygal
 from pygal.style import LightStyle
-import datetime
+from datetime import date
 import json
 
 
@@ -96,14 +96,14 @@ def coverage_chart(request):
     boundary_id = request.GET.get('id')
     admin_level = request.GET.get('admin_level')
 
-    chart = pygal.DateY(
+    chart = pygal.DateLine(
         x_label_rotation=90,
         range=(0, 100),
         fill=True,
         style=LightStyle
     )
 
-    today = datetime.date.today()
+    today = date.today()
 
     if boundary_id:
         coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
@@ -117,7 +117,6 @@ def coverage_chart(request):
 
             if i == last and coverage_score.date != today:
                 values.append((today, round(coverage_score.coverage, 1)))
-
 
         chart.add(coverage_boundary.name, values)
     elif admin_level:
