@@ -107,7 +107,7 @@ def coverage_chart(request):
 
     if boundary_id:
         coverage_boundary = get_object_or_404(CoverageBoundary, pk=boundary_id)
-        coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id)
+        coverage_scores = CoverageScore.objects.filter(coverage_boundary_id=boundary_id).order_by('date')
 
         values = []
 
