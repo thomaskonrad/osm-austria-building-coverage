@@ -40,7 +40,7 @@ if [ ${exit_code} -eq 0 ]; then
 
     if [ ${exit_code} -eq 0 ]; then
         echo "$(current_time) Incremental coverage scores update: Starting."
-        ${scriptdir}coverage-scores/update-coverage.py ${municipality_tiles_path} ${basemap_tiles_path} ${osm_tiles_path} ${database_name}
+        ${scriptdir}coverage-scores/update-coverage.py -m ${municipality_tiles_path} -b ${basemap_tiles_path} -o ${osm_tiles_path} -d ${database_name}
         exit_code=$?
         echo "$(current_time) Incremental coverage scores update: Process finished with exit code ${exit_code}."
 
