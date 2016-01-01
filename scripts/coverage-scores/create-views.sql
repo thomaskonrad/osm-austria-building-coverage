@@ -40,7 +40,7 @@ select b.gkz::int as id, b.admin_level, b.name,
   b.bbox_geojson as bbox
 from austria_admin_boundaries b
   left join austria_admin_boundaries parent on (b.parent = parent.id)
-  left join austria_building_coverage c on (c.boundary_id = b.id)
+  left join austria_building_coverage c on (c.boundary_id = b.id and c.timestamp = (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id))
 ;
 
 
@@ -51,3 +51,4 @@ create view coverage_score as
 select c.id, b.gkz::int as coverage_boundary_id, c.timestamp::date as date, c.coverage
 from austria_building_coverage c
   left join austria_admin_boundaries b on (c.boundary_id = b.id)
+order by date asc;
