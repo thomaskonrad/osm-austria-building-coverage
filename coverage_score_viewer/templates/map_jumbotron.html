@@ -12,6 +12,9 @@
                 {% blocktrans with total_coverage_gain=coverage_boundary.total_coverage_gain|floatformat:0 oldest_timestamp=coverage_boundary.oldest_timestamp|date:"SHORT_DATE_FORMAT"|localize  %}compared to <a href="http://www.basemap.at">basemap.at</a>. That's a difference of ~{{ total_coverage_gain }} % since {{ oldest_timestamp }}.{% endblocktrans %}
             </span>
         </div>
+        <div class="map-buttons">
+            <a href="/map/?boundary_id={{ coverage_boundary.id }}#8/47.699/13.348" class="btn btn-primary" target="_blank">{% trans 'Open Map in Separate Tab' %}</a>
+        </div>
     </div>
     <iframe src="/map/?disable_scroll_whell_zoom=true&boundary_id={{ coverage_boundary.id }}#8/47.699/13.348" width="100%" height="500px" seamless="true" allowfullscreen="true" webkitallowfullscreen="true" frameborder="none"></iframe>
 </div>

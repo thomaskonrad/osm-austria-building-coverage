@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-02 18:00+0200\n"
+"POT-Creation-Date: 2016-01-03 19:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,52 +18,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: models.py:22
+#: coverage_score_viewer/models.py:22
 msgid "Country"
 msgstr "Staat"
 
-#: models.py:23
+#: coverage_score_viewer/models.py:23
 msgid "Countries"
 msgstr "Staaten"
 
-#: models.py:27
+#: coverage_score_viewer/models.py:27
 msgid "State"
 msgstr "Bundesland"
 
-#: models.py:28 templates/index.html:65
+#: coverage_score_viewer/models.py:28
+#: coverage_score_viewer/templates/index.html:65
 msgid "States"
 msgstr "Bundesländer"
 
-#: models.py:32
+#: coverage_score_viewer/models.py:32
 msgid "District"
 msgstr "Bezirk"
 
-#: models.py:33
+#: coverage_score_viewer/models.py:33
 msgid "Districts"
 msgstr "Bezirke"
 
-#: models.py:37
+#: coverage_score_viewer/models.py:37
 msgid "Municipality"
 msgstr "Gemeinde"
 
-#: models.py:38
+#: coverage_score_viewer/models.py:38
 msgid "Municipalities"
 msgstr "Gemeinden"
 
-#: templates/base.html:42
+#: coverage_score_viewer/templates/base.html:42
 msgid "OpenStreetMap Austria Building Coverage"
 msgstr "OpenStreetMap-Gebäudeabdeckung in Österreich"
 
-#: templates/base.html:46
+#: coverage_score_viewer/templates/base.html:46
 msgid "Search State, District or Municipality"
 msgstr "Nach Bundesland, Bezirk oder Gemeinde suchen"
 
-#: templates/details.html:12
+#: coverage_score_viewer/templates/details.html:12
 #, python-format
 msgid "%(admin_level_string)s of %(name)s"
 msgstr "%(admin_level_string)s %(name)s"
 
-#: templates/details.html:19
+#: coverage_score_viewer/templates/details.html:19
 #, python-format
 msgid ""
 "\n"
@@ -84,46 +85,51 @@ msgstr ""
 "            Details.\n"
 "        "
 
-#: templates/details.html:30
+#: coverage_score_viewer/templates/details.html:32
 msgid "Total Coverage"
 msgstr "Gesamtabdeckung"
 
-#: templates/details.html:34
+#: coverage_score_viewer/templates/details.html:36
 msgid "Original Coverage"
 msgstr "Ursprüngliche Abdeckung"
 
-#: templates/details.html:38 templates/list.html:18
+#: coverage_score_viewer/templates/details.html:40
+#: coverage_score_viewer/templates/list.html:18
 msgid "Difference since the Start"
 msgstr "Differenz seit dem Anfang"
 
-#: templates/details.html:42 templates/list.html:15
-#: templates/table_small.html:11
+#: coverage_score_viewer/templates/details.html:44
+#: coverage_score_viewer/templates/list.html:15
+#: coverage_score_viewer/templates/table_small.html:11
 msgid "Latest Changes"
 msgstr "Letzte Änderung"
 
-#: templates/details.html:53
+#: coverage_score_viewer/templates/details.html:61
 msgid "Overall Rank"
 msgstr "Gesamtrang"
 
-#: templates/details.html:54 templates/list.html:14
-#: templates/table_small.html:10
+#: coverage_score_viewer/templates/details.html:62
+#: coverage_score_viewer/templates/list.html:14
+#: coverage_score_viewer/templates/table_small.html:10
 msgid "Name"
 msgstr "Name"
 
-#: templates/details.html:55 templates/list.html:17
-#: templates/table_small.html:12
+#: coverage_score_viewer/templates/details.html:63
+#: coverage_score_viewer/templates/list.html:17
+#: coverage_score_viewer/templates/table_small.html:12
 msgid "Coverage"
 msgstr "Abdeckung"
 
-#: templates/details.html:56 templates/table_small.html:14
+#: coverage_score_viewer/templates/details.html:64
+#: coverage_score_viewer/templates/table_small.html:14
 msgid "Difference"
 msgstr "Differenz"
 
-#: templates/index.html:14
+#: coverage_score_viewer/templates/index.html:14
 msgid "The OpenStreetMap Austria Building Coverage in Numbers"
 msgstr "Die OpenStreetMap-Gebäudeabdeckung in Österreich in Zahlen"
 
-#: templates/index.html:17
+#: coverage_score_viewer/templates/index.html:17
 msgid ""
 "Welcome! This site aims to give an overview of how high the building "
 "coverage in Austria on OpenStreetMap is compared to <a href=\"http://www."
@@ -135,7 +141,7 @@ msgstr ""
 "href=\"http://www.basemap.at\">basemap.at</a> ist. Aber bevor du dich in die "
 "Zahlen stürzt, lass mich ein paar Dinge anmerken:"
 
-#: templates/index.html:22
+#: coverage_score_viewer/templates/index.html:22
 msgid ""
 "This is not a public request to uncritically copy from other maps, even "
 "though they allow you to do so."
@@ -143,7 +149,7 @@ msgstr ""
 "Dies ist kein öffentlicher Aufruf, unkritisch von amtlichen Karten zu "
 "kopieren, auch wenn diese erlauben, das zu tun."
 
-#: templates/index.html:25
+#: coverage_score_viewer/templates/index.html:25
 msgid ""
 "This site <em>only</em> aims to serve as an approximation to show which "
 "regions in Austria have the most catching-up to do in terms of building (and "
@@ -153,7 +159,7 @@ msgstr ""
 "Antwort auf die Frage, welche Regionen in Österreich am meisten Aufholbedarf "
 "bezüglich Gebäude- (und daher wahrscheinlich auch Adress-) Abdeckung haben."
 
-#: templates/index.html:28
+#: coverage_score_viewer/templates/index.html:28
 msgid ""
 "It should also be a motivation for people to map buildings and addresses in "
 "their area."
@@ -161,7 +167,7 @@ msgstr ""
 "Sie soll auch eine Motivation für Leute sein, Gebäude und Adressen in ihrer "
 "Umgebung zu erfassen."
 
-#: templates/index.html:31
+#: coverage_score_viewer/templates/index.html:31
 msgid ""
 "If you use <a href=\"http://www.basemap.at\">basemap.at</a> as a source for "
 "mapping, please take the same quality-assuring measures as always as the map "
@@ -172,7 +178,7 @@ msgstr ""
 "Maßnahmen zu treffen, denn die Karte hat viele Ungenauigkeiten und ist je "
 "nach Region teilweise sehr veraltet."
 
-#: templates/index.html:34
+#: coverage_score_viewer/templates/index.html:34
 msgid ""
 "When you map building outlines, please also map the corresponding <a href="
 "\"http://wiki.openstreetmap.org/wiki/DE:Key:addr\">addresses</a>."
@@ -180,7 +186,7 @@ msgstr ""
 "Wenn du Gebäudeumrisse erfasst, erfasse bitte auch gleich die dazugehörigen "
 "<a href=\"http://wiki.openstreetmap.org/wiki/DE:Key:addr\">Addressen</a>."
 
-#: templates/index.html:37
+#: coverage_score_viewer/templates/index.html:37
 msgid ""
 "Complete coverage can probably not be reached (without cheating), because of "
 "certain inaccuracies in both maps. Do not make this your goal; instead, use "
@@ -194,58 +200,59 @@ msgstr ""
 "Interpretation der Zahlen und der visuellen Darstellung der Abdeckung. Alles "
 "über 85 Prozent kann als praktisch komplett angesehen werden."
 
-#: templates/index.html:46
+#: coverage_score_viewer/templates/index.html:46
 msgid "The Least Covered Regions in Austria"
 msgstr "Die am wenigsten abgedeckten Gebiete in Österreich"
 
-#: templates/index.html:47
+#: coverage_score_viewer/templates/index.html:47
 msgid "These are the regions that have the most catching-up to do."
 msgstr "Dies sind jene Regionen, die den größten Aufholbedarf haben."
 
-#: templates/index.html:50
+#: coverage_score_viewer/templates/index.html:50
 msgid "Least Covered Districts"
 msgstr "Die am wenigsten abgedeckten Bezirke"
 
-#: templates/index.html:54
+#: coverage_score_viewer/templates/index.html:54
 msgid "Least Covered Municipalities"
 msgstr "Die am wenigsten abgedeckten Gemeinden"
 
-#: templates/index.html:61
+#: coverage_score_viewer/templates/index.html:61
 msgid "Top Regions in Austria"
 msgstr "Die Regionen mit der größten Abdeckung"
 
-#: templates/index.html:62
+#: coverage_score_viewer/templates/index.html:62
 msgid ""
 "These regions have the best coverage compared to <a href=\"http://www."
 "basemap.at\">basemap.at</a>."
 msgstr ""
 
-#: templates/index.html:69
+#: coverage_score_viewer/templates/index.html:69
 msgid "Top 10 Districts"
 msgstr "Bezirke Top 10"
 
-#: templates/index.html:76
+#: coverage_score_viewer/templates/index.html:76
 msgid "Top 10 Municipalities"
 msgstr "Gemeinden Top 10"
 
-#: templates/index.html:80
+#: coverage_score_viewer/templates/index.html:80
 msgid "Top 10 Ascending Municipalities"
 msgstr "Aufsteigende Gemeinden Top 10"
 
-#: templates/list.html:13 templates/table_small.html:9
+#: coverage_score_viewer/templates/list.html:13
+#: coverage_score_viewer/templates/table_small.html:9
 msgid "Rank"
 msgstr "Rang"
 
-#: templates/list.html:16
+#: coverage_score_viewer/templates/list.html:16
 msgid "Is In"
 msgstr "Ist in"
 
-#: templates/map_jumbotron.html:8
+#: coverage_score_viewer/templates/map_jumbotron.html:8
 #, python-format
 msgid "%(coverage_boundary)s has a total building coverage of"
 msgstr "%(coverage_boundary)s hat eine Gebäudeabdeckung von"
 
-#: templates/map_jumbotron.html:12
+#: coverage_score_viewer/templates/map_jumbotron.html:12
 #, python-format
 msgid ""
 "compared to <a href=\"http://www.basemap.at\">basemap.at</a>. That's a "
@@ -254,7 +261,11 @@ msgstr ""
 "im Vergleich zu <a href=\"http://www.basemap.at\">basemap.at</a>. Das ist "
 "eine Differenz von ~%(total_coverage_gain)s %% seit %(oldest_timestamp)s."
 
-#: templates/table_small.html:43
+#: coverage_score_viewer/templates/map_jumbotron.html:16
+msgid "Open Map in Separate Tab"
+msgstr "Karte in neuem Tab öffnen"
+
+#: coverage_score_viewer/templates/table_small.html:43
 #, python-format
 msgid "See all %(admin_level_name)s"
 msgstr "Alle %(admin_level_name)s sehen"
