@@ -323,7 +323,7 @@ def main():
                     print("The latest timestamp of the tiles of municipality %s has changed but these changes did not "
                           "affect this municipality. Not updating the timestamp anyway because the municipality has "
                           "only one coverage score entry. Updating the timestamp would cause the municipality not to "
-                          "have a score entry on the first day.")
+                          "have a score entry on the first day." % name)
 
 
     # Alright, all municipalities updated. Now let's update the total coverage scores of districts, federal states and
