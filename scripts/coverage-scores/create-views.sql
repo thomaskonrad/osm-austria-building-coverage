@@ -2,7 +2,7 @@
 drop materialized view if exists coverage_boundary;
 
 create materialized view coverage_boundary as
-select b.gkz::int as id, b.admin_level, b.name,
+select b.gkz::int as id, b.admin_level, b.name, b.abbreviation,
   rank() over (partition by b.admin_level order by coverage desc) as rank,
   parent.gkz::int as parent_id,
   (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id) as latest_timestamp,
