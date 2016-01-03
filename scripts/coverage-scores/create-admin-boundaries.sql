@@ -57,7 +57,7 @@ update austria_admin_boundaries set abbreviation='Vbg.' where name='Vorarlberg';
 update austria_admin_boundaries set abbreviation='W' where name='Wien';
 
 -- Update GKZ of Vienna (which is both a federal state and a municipality)
-update austria_admin_boundaries set gkz='9' where admin_level = 1 and gkz='9,90001';
+update austria_admin_boundaries set gkz='9' where admin_level = 1 and name='Wien';
 
 -- Insert districts
 insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox, way_area, gkz, parent)
@@ -70,6 +70,7 @@ insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox
         (
             p.admin_level='6'
             or (p.admin_level='4' and p.name='Wien')
+            or (p.admin_level='8' and p.name='Innsbruck')
         )
     and r.tags::hstore ? 'ref:at:gkz'
     and (p.osm_id * -1) = r.id
@@ -78,9 +79,7 @@ insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox
 );
 
 -- Update GKZ of Vienna (which is both a federal state and a municipality)
-update austria_admin_boundaries set gkz='900' where admin_level = 2 and gkz='9,90001';
-update austria_admin_boundaries set gkz='10101' where admin_level = 3 and name='Eisenstadt (Stadt)';
-update austria_admin_boundaries set gkz='10201' where admin_level = 3 and name='Rust';
+update austria_admin_boundaries set gkz='900' where admin_level = 2 and name='Wien';
 
 -- Insert all municipalities (takes 55 seconds on my machine)
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
@@ -109,7 +108,10 @@ insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gk
     order by gkz
 );
 
-update austria_admin_boundaries set gkz='61214' where name = 'Großsölk';
+-- Update GKZ of 'Statutarstädte' so that they don't have the same ID as their parent (which is themselves).
+update austria_admin_boundaries set gkz='10102' where admin_level = 3 and name='Eisenstadt (Stadt)';
+update austria_admin_boundaries set gkz='10202' where admin_level = 3 and name='Rust';
+update austria_admin_boundaries set gkz='70102' where admin_level = 3 and name='Innsbruck';
 
 -- Insert city districts / municipalities as municipalities
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
