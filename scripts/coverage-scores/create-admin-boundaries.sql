@@ -78,6 +78,8 @@ insert into austria_admin_boundaries (admin_level, name, abbreviation, way, bbox
     order by gkz
 );
 
+update austria_admin_boundaries set abbreviation='I' where name='Innsbruck' and admin_level=2;
+
 -- Update GKZ of Vienna (which is both a federal state and a municipality)
 update austria_admin_boundaries set gkz='900' where admin_level = 2 and name='Wien';
 
