@@ -117,8 +117,8 @@ def get_latest_coverage_entry(cur, boundary_id):
 
 
 def update_coverage_entry_timestamp(cur, conn, entry_id, timestamp):
-    cur.execute("update austria_building_coverage set timestamp = to_timestamp(%.0f) where id = %s",
-                (timestamp, entry_id,))
+    cur.execute("update austria_building_coverage set timestamp = to_timestamp(%s) where id = %s",
+                ("%.0f" % timestamp, entry_id,))
     conn.commit()
 
 
