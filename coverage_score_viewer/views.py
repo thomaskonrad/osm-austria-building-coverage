@@ -17,8 +17,8 @@ def index(request):
     top_10_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('rank')[:10]
     top_10_ascending_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('-total_coverage_gain')[:10]
 
-    least_covered_districts = CoverageBoundary.objects.filter(admin_level=2).order_by('-rank')[:50]
-    least_covered_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('-rank')[:50]
+    least_covered_districts = CoverageBoundary.objects.filter(admin_level=2).order_by('-rank')[:20]
+    least_covered_municipalities = CoverageBoundary.objects.filter(admin_level=3).order_by('-rank')[:20]
 
     context = {
         'country': country,
@@ -118,7 +118,10 @@ def coverage_chart(request):
             if i == last and coverage_score.date != today:
                 values.append((today, round(coverage_score.coverage, 1)))
 
-        chart.add(coverage_boundary.name, values)
+        if coverage_boundary.abbreviation is not None:
+            chart.add(coverage_boundary.abbreviation, values)
+        else:
+            chart.add(coverage_boundary.name, values)
     elif admin_level:
         coverage_boundaries = CoverageBoundary.objects.filter(admin_level=admin_level).order_by('rank')[:10]
 
@@ -134,6 +137,10 @@ def coverage_chart(request):
                 if i == last and coverage_score.date != today:
                     values.append((today, round(coverage_score.coverage, 1)))
 
-            chart.add(coverage_boundary.name, values)
+            if coverage_boundary.abbreviation is not None:
+                chart.add(coverage_boundary.abbreviation, values)
+            else:
+                chart.add(coverage_boundary.name, values)
+
 
     return HttpResponse(chart.render(), content_type="image/svg+xml")

@@ -54,7 +54,7 @@
 
 
     {% if children %}
-        <h2>{{ coverage_boundary.children_admin_level_string }}</h2>
+        <h2>{% blocktrans with admin_level_string=coverage_boundary.admin_level_string name=coverage_boundary %}{{ admin_level_string }} of {{ name }}{% endblocktrans %}: {{ coverage_boundary.children_admin_level_string }}</h2>
 
         <table class="table table-bordered table-striped table-nonfluid">
             <tr>
@@ -62,6 +62,7 @@
                 <th>{% trans 'Name' %}</th>
                 <th>{% trans 'Coverage' %}</th>
                 <th>{% trans 'Difference' %}</th>
+                <th>{% trans 'Latest Changes' %}</th>
             </tr>
             {% for child in children %}
                 <tr>
@@ -69,6 +70,7 @@
                     <td><a href="{% url "coverage_score_viewer.views.details" child.id %}">{{ child }}</a></td>
                     <td>{% include "coverage_formatted.html" with coverage=child.coverage %}</td>
                     <td>~{{ child.total_coverage_gain|floatformat:0 }} %</td>
+                    <td>{{ child.latest_timestamp|date:"SHORT_DATE_FORMAT"|localize }}</td>
                 </tr>
             {% endfor %}
         </table>

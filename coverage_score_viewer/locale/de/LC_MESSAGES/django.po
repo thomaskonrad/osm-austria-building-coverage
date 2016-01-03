@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-03 19:10+0100\n"
+"POT-Creation-Date: 2016-01-03 19:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,36 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: coverage_score_viewer/models.py:22
+#: coverage_score_viewer/models.py:23
 msgid "Country"
 msgstr "Staat"
 
-#: coverage_score_viewer/models.py:23
+#: coverage_score_viewer/models.py:24
 msgid "Countries"
 msgstr "Staaten"
 
-#: coverage_score_viewer/models.py:27
+#: coverage_score_viewer/models.py:28
 msgid "State"
 msgstr "Bundesland"
 
-#: coverage_score_viewer/models.py:28
-#: coverage_score_viewer/templates/index.html:65
+#: coverage_score_viewer/models.py:29
+#: coverage_score_viewer/templates/index.html:56
+#: coverage_score_viewer/templates/index.html:69
 msgid "States"
 msgstr "Bundesländer"
 
-#: coverage_score_viewer/models.py:32
+#: coverage_score_viewer/models.py:33
 msgid "District"
 msgstr "Bezirk"
 
-#: coverage_score_viewer/models.py:33
+#: coverage_score_viewer/models.py:34
 msgid "Districts"
 msgstr "Bezirke"
 
-#: coverage_score_viewer/models.py:37
+#: coverage_score_viewer/models.py:38
 msgid "Municipality"
 msgstr "Gemeinde"
 
-#: coverage_score_viewer/models.py:38
+#: coverage_score_viewer/models.py:39
 msgid "Municipalities"
 msgstr "Gemeinden"
 
@@ -201,42 +202,59 @@ msgstr ""
 "über 85 Prozent kann als praktisch komplett angesehen werden."
 
 #: coverage_score_viewer/templates/index.html:46
-msgid "The Least Covered Regions in Austria"
-msgstr "Die am wenigsten abgedeckten Gebiete in Österreich"
+msgid "Overview"
+msgstr "Überblick"
 
 #: coverage_score_viewer/templates/index.html:47
-msgid "These are the regions that have the most catching-up to do."
-msgstr "Dies sind jene Regionen, die den größten Aufholbedarf haben."
+msgid "Some statistics that give you an overview over the current state."
+msgstr "Einige Statistiken die einen Überblick über den aktuellen Status verschaffen."
 
 #: coverage_score_viewer/templates/index.html:50
-msgid "Least Covered Districts"
-msgstr "Die am wenigsten abgedeckten Bezirke"
+msgid "Whole Austria"
+msgstr "Ganz Österreich"
 
-#: coverage_score_viewer/templates/index.html:54
-msgid "Least Covered Municipalities"
-msgstr "Die am wenigsten abgedeckten Gemeinden"
+#: coverage_score_viewer/templates/index.html:52
+#, fuzzy
+#| msgid "The OpenStreetMap Austria Building Coverage in Numbers"
+msgid "OpenStreetMap Building Coverage in Austria"
+msgstr "Die OpenStreetMap-Gebäudeabdeckung in Österreich in Zahlen"
 
-#: coverage_score_viewer/templates/index.html:61
+#: coverage_score_viewer/templates/index.html:58
+#, fuzzy
+#| msgid "The OpenStreetMap Austria Building Coverage in Numbers"
+msgid "OpenStreetMap Building Coverage of all Austrian Provinces"
+msgstr "Die OpenStreetMap-Gebäudeabdeckung in Österreich in Zahlen"
+
+#: coverage_score_viewer/templates/index.html:65
 msgid "Top Regions in Austria"
 msgstr "Die Regionen mit der größten Abdeckung"
 
-#: coverage_score_viewer/templates/index.html:62
+#: coverage_score_viewer/templates/index.html:66
 msgid ""
 "These regions have the best coverage compared to <a href=\"http://www."
 "basemap.at\">basemap.at</a>."
-msgstr ""
+msgstr "Diese regionen haben die beste Abdeckung im Vergleich zu "
+"<a href=\"http://www.basemap.at\">basemap.at</a>."
 
-#: coverage_score_viewer/templates/index.html:69
+#: coverage_score_viewer/templates/index.html:73
 msgid "Top 10 Districts"
 msgstr "Bezirke Top 10"
 
-#: coverage_score_viewer/templates/index.html:76
-msgid "Top 10 Municipalities"
-msgstr "Gemeinden Top 10"
-
 #: coverage_score_viewer/templates/index.html:80
-msgid "Top 10 Ascending Municipalities"
-msgstr "Aufsteigende Gemeinden Top 10"
+msgid "The Least Covered Regions in Austria"
+msgstr "Die am wenigsten abgedeckten Gebiete in Österreich"
+
+#: coverage_score_viewer/templates/index.html:81
+msgid "These are the regions that have the most catching-up to do."
+msgstr "Dies sind jene Regionen, die den größten Aufholbedarf haben."
+
+#: coverage_score_viewer/templates/index.html:84
+msgid "Least Covered Districts"
+msgstr "Die am wenigsten abgedeckten Bezirke"
+
+#: coverage_score_viewer/templates/index.html:88
+msgid "Least Covered Municipalities"
+msgstr "Die am wenigsten abgedeckten Gemeinden"
 
 #: coverage_score_viewer/templates/list.html:13
 #: coverage_score_viewer/templates/table_small.html:9
@@ -269,3 +287,12 @@ msgstr "Karte in neuem Tab öffnen"
 #, python-format
 msgid "See all %(admin_level_name)s"
 msgstr "Alle %(admin_level_name)s sehen"
+
+#~ msgid "Provinces"
+#~ msgstr "Bundesländer"
+
+#~ msgid "Top 10 Municipalities"
+#~ msgstr "Gemeinden Top 10"
+
+#~ msgid "Top 10 Ascending Municipalities"
+#~ msgstr "Aufsteigende Gemeinden Top 10"

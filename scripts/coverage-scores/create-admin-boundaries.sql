@@ -32,6 +32,8 @@ insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gk
     group by admin_level, name, gkz
 );
 
+update austria_admin_boundaries set abbreviation='Ö' where name='Österreich';
+
 -- Select Austrian federal states and insert them
 insert into austria_admin_boundaries (admin_level, name, way, bbox, way_area, gkz, parent)
 (

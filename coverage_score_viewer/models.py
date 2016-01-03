@@ -6,6 +6,7 @@ class CoverageBoundary(models.Model):
     id = models.IntegerField(primary_key=True)
     admin_level = models.IntegerField()
     name = models.TextField()
+    abbreviation = models.TextField()
     rank = models.IntegerField()
     parent = models.ForeignKey("CoverageBoundary")
     latest_timestamp = models.DateTimeField()
