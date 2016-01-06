@@ -25,7 +25,7 @@ print("That's %d tiles total." % (totalNumberOfTiles))
 # Loop through all tiles
 for x in range(minX, maxX + 1):
     for y in range(minY, maxY + 1):
-        directory = "basemap-%d/%d/" % (zoomLevel, x)
+        directory = "basemap/%d/%d/" % (zoomLevel, x)
         file = directory + "%d.png" % (y)
 
         if not os.path.isfile(file):

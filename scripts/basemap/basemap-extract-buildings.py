@@ -68,7 +68,7 @@ def main():
     maxY = int(sys.argv[5]) # 23220
 
     originalFilesPath = working_directory + "basemap/16/%d/%d.png"
-    extractedFilesDirectory = working_directory + "basemap-buildings-extracted-b/16/%d/"
+    extractedFilesDirectory = working_directory + "basemap-buildings-extracted/16/%d/"
 
     totalNumberOfTiles = (maxX - minX + 1) * (maxY - minY + 1)
     numberOfTilesProcessed = 0
