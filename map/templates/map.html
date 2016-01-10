@@ -43,38 +43,38 @@
 
     <script>
         var basemap = L.tileLayer(
-            'http://tiles.thomaskonrad.at/austria/basemap-buildings-extracted/{z}/{x}/{y}.png',
+            'https://tiles.thomaskonrad.at/austria/basemap-buildings-extracted/{z}/{x}/{y}.png',
             {
 				zIndex: 0,
-                attribution: '<a href="http://www.basemap.at">basemap.at</a>'
+                attribution: '<a href="https://www.basemap.at">basemap.at</a>'
             }
         );
         var osmBuildingsOriginal = L.tileLayer(
-            'http://tiles.thomaskonrad.at/austria/osm-buildings-only-original/{z}/{x}/{y}.png',
+            'https://tiles.thomaskonrad.at/austria/osm-buildings-only-original/{z}/{x}/{y}.png',
             {
 				zIndex: 1,
-                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+                attribution: ' <a href="https://www.openstreetmap.org">OpenStreetMap</a> contributors'
             }
         );
 		var osmBuildingsCurrent = L.tileLayer(
-            'http://tiles.thomaskonrad.at/austria/osm-buildings-only-current/{z}/{x}/{y}.png',
+            'https://tiles.thomaskonrad.at/austria/osm-buildings-only-current/{z}/{x}/{y}.png',
             {
 				zIndex: 2,
-                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+                attribution: ' <a href="https://www.openstreetmap.org">OpenStreetMap</a> contributors'
             }
         );
         var osmCitiesBoundaries = L.tileLayer(
-            'http://tiles.thomaskonrad.at/austria/osm-places-boundaries/{z}/{x}/{y}.png',
+            'https://tiles.thomaskonrad.at/austria/osm-places-boundaries/{z}/{x}/{y}.png',
             {
 				zIndex: 3,
-                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+                attribution: ' <a href="https://www.openstreetmap.org">OpenStreetMap</a> contributors'
             }
         );
 		var osmStandard = L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             {
 				zIndex: 4,
-                attribution: ' <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors'
+                attribution: ' <a href="https://www.openstreetmap.org">OpenStreetMap</a> contributors'
             }
         );
 

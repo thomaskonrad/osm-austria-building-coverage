@@ -1,7 +1,7 @@
 # OpenStreetMap Austria Building Coverage
 
 This is a services that continuously calculates the building outline coverage in OpenStreetMap compared to the Austrian
-[basemap](http://www.basemap.at) for each Austrian municipality, district, and federal state.
+[basemap](https://www.basemap.at) for each Austrian municipality, district, and federal state.
 
 [See The Site in Action!](https://osm-austria-building-coverage.thomaskonrad.at/)
 
