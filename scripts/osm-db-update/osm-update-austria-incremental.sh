@@ -21,7 +21,7 @@ osmupdate_status=$?
 
 if [ ${osmupdate_status} -eq 0 ]; then
 	echo "$(current_time) Creation of change file succeeded, importing data..."
-	osm2pgsql --append -S /usr/share/osm2pgsql/default.style ${change_file_name}
+	osm2pgsql -C4096 --number-processes 4 --append -S /usr/share/osm2pgsql/default.style ${change_file_name}
 
 	if [ $? -eq 0 ]; then
 		echo "$(current_time) Incremental update done. Moving files..."
