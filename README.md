@@ -10,7 +10,7 @@ This is a services that continuously calculates the building outline coverage in
 Here is a rough outline of the setup process if you want to run the service on your own.
 
  * Install Python 3
- * Install required Python modules
+ * Install required Python 3 modules
     * `psycopg2`
     * `Pillow`
     * `numpy`
@@ -18,6 +18,7 @@ Here is a rough outline of the setup process if you want to run the service on y
     * `requests`
     * `django`
     * `pygal`
+    * `mapnik`
  * Install PostgreSQL 9.x
  * Install required PostgreSQL extensions
     * PostGIS
