@@ -3,6 +3,13 @@
 {% load l10n %}
 {% load i18n %}
 
+{% block title %}
+    {% blocktrans with admin_level_string=coverage_boundary.admin_level_string name=coverage_boundary %}{{ admin_level_string }} of {{ name }}{% endblocktrans %}
+    {% if coverage_boundary.parent %}
+        ({{ coverage_boundary.parent }})
+    {% endif %}
+{% endblock %}
+
 {% block jumbotron %}
     {% include 'map_jumbotron.html' with coverage_boundary=coverage_boundary %}
 {% endblock %}
