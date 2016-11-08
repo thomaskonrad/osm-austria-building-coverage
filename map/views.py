@@ -23,7 +23,6 @@ def map(request):
     root_boundary = CoverageBoundary.objects.get(pk=0)
 
     context = {
-        'coverage_boundary': boundary,
         'disable_scroll_whell_zoom': request.GET.get('disable_scroll_whell_zoom', False),
         'polygon': polygon,
         'bbox': bbox,
