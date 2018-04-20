@@ -5,19 +5,21 @@ create materialized view coverage_boundary as
 select b.gkz::int as id, b.admin_level, b.name, b.abbreviation,
   rank() over (partition by b.admin_level order by coverage desc) as rank,
   parent.gkz::int as parent_id,
-  (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id) as latest_timestamp,
-  (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id) as oldest_timestamp,
+  (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id limit 1) as latest_timestamp,
+  (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id limit 1) as oldest_timestamp,
   (
     select c1.coverage
     from austria_building_coverage c1
     where c1.boundary_id = b.id and timestamp =
       (select max(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+    LIMIT 1
   ) as coverage,
   (
     select c4.coverage
     from austria_building_coverage c4
     where c4.boundary_id = b.id and timestamp =
       (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+    LIMIT 1
   ) as original_coverage,
   (
     (
@@ -26,14 +28,17 @@ select b.gkz::int as id, b.admin_level, b.name, b.abbreviation,
       WHERE c1.boundary_id = b.id AND timestamp =
                                       (SELECT max(c1.timestamp)
                                        FROM austria_building_coverage c1
-                                       WHERE c1.boundary_id = b.id)
+                                       WHERE c1.boundary_id = b.id
+                                       LIMIT 1)
+      LIMIT 1
     )
     -
     (
     select c4.coverage
     from austria_building_coverage c4
     where c4.boundary_id = b.id and timestamp =
-      (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id)
+      (select min(c1.timestamp) from austria_building_coverage c1 where c1.boundary_id = b.id limit 1)
+    limit 1
     )
   ) as total_coverage_gain,
   b.simplified_way_geojson as polygon,
